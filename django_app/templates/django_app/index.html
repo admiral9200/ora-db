@@ -1,0 +1,12 @@
+{% extends 'django_app/base_template.html' %}
+{% block title %}Main page{% endblock %}
+{% block content %}
+    <h1 class="header">Welcome home, bro!</h1>
+
+    <h2>There are some links for you to visit and get some info</h2>
+
+    <ul class="list-group">
+        <li class="list_item"><a href="{% url 'django_app:clients' %}">Clients</a></li>
+        <li class="list_item"><a href="{% url 'django_app:offices' %}">Offices</a></li>
+    </ul>
+{% endblock %}

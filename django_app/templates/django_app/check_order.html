@@ -1,0 +1,12 @@
+{% extends 'django_app/base_template.html' %}
+{% block title %}Order id form{% endblock %}
+
+{% block content %}
+
+    <form method="post" action="{% url 'django_app:check_order' %}">
+        {% csrf_token %}
+        {{ form }}
+        <input class="btn" value="Check!" type="submit"/>
+    </form>
+
+{% endblock %}

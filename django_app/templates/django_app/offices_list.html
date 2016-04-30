@@ -1,0 +1,26 @@
+{% extends "django_app/base_template.html" %}
+{% block title %}ClientList{% endblock %}
+{% block content %}
+<h2 class="header">All offices</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            {% for header_name in headers %}
+                <td style="font-weight: bold">{{ header_name }}</td>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+
+    {% for record in offices %}
+        <tr>
+        {% for record_value in record %}
+            <td>{{ record_value }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
+{% endblock %}
