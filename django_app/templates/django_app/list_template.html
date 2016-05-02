@@ -1,0 +1,33 @@
+{% extends "django_app/base_template.html" %}
+{% block title %}ClientList{% endblock %}
+{% block content %}
+{% if error %}
+    <h2 class="header">Access denied, peach!</h2>
+{% else %}
+    {% if data %}
+        <h2 class="header">{% block header %}{% endblock %}</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    {% for header_name in headers %}
+                        <td style="font-weight: bold">{{ header_name }}</td>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for record in data %}
+                <tr>
+                {% for record_value in record %}
+                    <td>{{ record_value }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+    {% else %}
+       <h2 class="header">{% block not_found %}{% endblock %}</h2>
+    {% endif %}
+{% endif %}
+{% endblock %}

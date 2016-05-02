@@ -1,9 +1,9 @@
 {% extends 'django_app/base_template.html' %}
-{% block title %}Order id form{% endblock %}
+{% block title %}Client id form{% endblock %}
 
 {% block content %}
 
-    <form method="post" action="{% url 'django_app:check_order' %}">
+    <form method="post" action="{% url 'django_app:check_client_orders' %}">
         {% csrf_token %}
         {{ form.as_p }}
         <input class="btn" value="Check!" type="submit"/>

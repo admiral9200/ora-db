@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
-
+from __future__ import unicode_literals
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -76,17 +76,50 @@ WSGI_APPLICATION = 'bdsm_django.wsgi.application'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'admin': {
         'ENGINE': 'django.db.backends.oracle',
         'NAME': 'oracledb',
         'USER': 'c##nexemjail',
         'PASSWORD': 'oraclepassword',
         'HOST': '',
         'PORT': '',
-        'OPTIONS':{
+        'OPTIONS': {
             'threaded': True,
         }
-    }
+    },
+    'worker': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'oracledb',
+        'USER': 'c##worker_connection',
+        'PASSWORD': 'password',
+        'HOST': '',
+        'PORT': '',
+        'OPTIONS': {
+            'threaded': True,
+        }
+    },
+    'user': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'oracledb',
+        'USER': 'c##user_connection',
+        'PASSWORD': 'password',
+        'HOST': '',
+        'PORT': '',
+        'OPTIONS': {
+            'threaded': True,
+        }
+    },
+    'default': {
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'oracledb',
+        'USER': 'c##guest_connection',
+        'PASSWORD': 'password',
+        'HOST': '',
+        'PORT': '',
+        'OPTIONS': {
+            'threaded': True,
+        }
+    },
 }
 
 

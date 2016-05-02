@@ -1,0 +1,14 @@
+{% extends 'django_app/base_template.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    {% if message %}
+        <h2 class="header">{{ message }}</h2>
+    {% endif %}
+    <form action="{% url 'django_app:login' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn" value="Login" type="submit">
+    </form>
+
+{% endblock %}

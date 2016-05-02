@@ -3,9 +3,9 @@
 
 {% block content %}
 
-    <form method="post" action="{% url 'django_app:check_order' %}">
+    <form method="post" action="{% url 'django_app:check_client_orders_ready_not_returned' %}">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form }}
         <input class="btn" value="Check!" type="submit"/>
     </form>
 

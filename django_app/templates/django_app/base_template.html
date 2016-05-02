@@ -22,15 +22,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Cleaning thing</a>
+          <a class="navbar-brand" href="{% url 'django_app:index' %}">Cleaning thing</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="{% url 'django_app:index' %}">Home</a></li>
+{#            <li><a href="{% url 'django_app:index' %}">Home</a></li>#}
             <li><a href="#about">Register</a></li>
-            <li><a href="#login">Login</a></li>
+            <li><a href="{% url 'django_app:login' %}">Login</a></li>
             <li><a href="{% url 'django_app:offices' %}">Offices</a></li>
-            <li><a href="{% url 'django_app:check_order' %}">Check order</a></li>
+            <li><a href="{% url 'django_app:check_order' %}">Check order status</a></li>
+            <li><a href="{% url 'django_app:check_client_orders' %}">Check client orders</a></li>
+            <li><a href="{% url 'django_app:check_client_orders_ready_not_returned' %}">Check ready orders</a></li>
+            <li><a href="{% url 'django_app:check_client_info' %}">Check client info</a></li>
+
           </ul>
         </div>
       </div>
