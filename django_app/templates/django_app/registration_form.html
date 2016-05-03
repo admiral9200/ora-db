@@ -1,0 +1,13 @@
+{%  extends 'django_app/base_template.html' %}
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+
+    <form method="post" action="{% url 'django_app:register' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="register">
+    </form>
+
+
+{% endblock %}

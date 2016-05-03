@@ -1,23 +1,18 @@
 from __future__ import print_function
 from __future__ import unicode_literals
-
-# Create your views here.
-import cx_Oracle
-from django.db import connection
-from django.http import response, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
-from django.db.transaction import connections
-from utils import prettify_strings, _get_row_names, _row_names_and_types
 from list_requests import list_request
-from .forms import OrderIdForm, ClientIdForm, LoginForm
-from login import login as logging_in
+from .forms import OrderIdForm, ClientIdForm, LoginForm, RegistrationForm
+from registraton_authorization import login as logging_in
+from registraton_authorization import register as register_in_db
 from errors import AccessDeniedError
 
 
 def get_clients(request):
     try:
-        row_names, data = list_request('get_clients')
+        row_names, data = list_request(request, 'get_clients')
     except AccessDeniedError:
         return render(request, 'django_app/client_list.html',
                   {"error": True})
@@ -27,7 +22,7 @@ def get_clients(request):
 
 def get_offices(request):
     try:
-        row_names, data = list_request('get_offices')
+        row_names, data = list_request(request, 'get_offices')
         return render(request, 'django_app/offices_list.html',
                       {"headers": row_names, "data": data})
     except AccessDeniedError:
@@ -41,7 +36,7 @@ def index(request):
 
 def get_order_info(request, order_id):
     try:
-        row_names, data = list_request('get_order_info', [int(order_id)])
+        row_names, data = list_request(request, 'get_order_info', [int(order_id)])
         is_ready_index = row_names.index('Is ready')
         for i, element in enumerate(data):
             data[i] = list(data[i])
@@ -67,7 +62,7 @@ def check_order(request):
 
 def client_orders(request, client_id):
     try:
-        row_names, data = list_request('client_orders', [int(client_id)])
+        row_names, data = list_request(request, 'client_orders', [int(client_id)])
         is_ready_index = row_names.index('Is ready')
         for i, element in enumerate(data):
             data[i] = list(data[i])
@@ -94,7 +89,7 @@ def check_client_orders(request):
 def client_orders_ready_not_returned(request, client_id):
     try:
 
-        row_names, data = list_request('ready_not_returned', [int(client_id)])
+        row_names, data = list_request(request, 'ready_not_returned', [int(client_id)])
         is_ready_index = row_names.index('Is ready')
         for i, element in enumerate(data):
             data[i] = list(data[i])
@@ -120,7 +115,7 @@ def check_client_orders_ready_not_returned(request):
 
 def client_info(request, client_id):
     try:
-        row_names, data = list_request('client_info', [int(client_id)])
+        row_names, data = list_request(request, 'client_info', [int(client_id)])
         is_ready_index = row_names.index('Best client')
         for i, element in enumerate(data):
             data[i] = list(data[i])
@@ -144,16 +139,67 @@ def check_client_info(request):
         return render(request, 'django_app/check_client_info.html', {"form": form})
 
 
+def logout(request):
+    resp = HttpResponseRedirect(reverse('django_app:index'))
+    resp.delete_cookie('username')
+    resp.delete_cookie('connection')
+    resp.write(render(request, 'django_app/index.html'))
+    return resp
+
+
 def login(request):
+    print(request.COOKIES)
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            login_ = form.cleaned_data['login']
+            username = form.cleaned_data['login']
             password = form.cleaned_data['password']
-            if logging_in(login_, password):
-                return render(request, 'django_app/index.html')
+
+            login_successful, cookie_values = logging_in(username, password)
+            if login_successful:
+                resp = HttpResponseRedirect(reverse('django_app:index'))
+                resp.set_cookie('username', cookie_values['username'])
+                resp.set_cookie('connection', cookie_values['connection'])
+                resp.set_cookie('client_id', cookie_values['client_id'])
+                resp.write(render(request, 'django_app/index.html', ))
+                return resp
             else:
-                return render(request, 'django_app/login_form.html', {"form": form, "message": 'Invalid login'})
+                return render(request, 'django_app/login_form.html',
+                      {"form": form, "message": 'Login failed'})
+        else:
+            return render(request, 'django_app/login_form.html',
+                            {"form": form, "message": 'Invalid form!'})
     else:
         form = LoginForm()
         return render(request, 'django_app/login_form.html', {"form": form, "message": None})
+
+
+def register(request):
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['login']
+            password = form.cleaned_data['password']
+            client_id = form.cleaned_data['client_id']
+            if register_in_db(username, password, int(client_id)):
+                resp = HttpResponseRedirect(reverse('django_app:index'))
+                resp.write(render(request, 'django_app/index.html'))
+                return resp
+        else:
+            return render(request, 'django_app/registration_form.html',
+                          {"form": form, 'message': 'Invalid input'})
+    else:
+        form = RegistrationForm()
+        return render(request, 'django_app/registration_form.html', {"form": form, 'message': None})
+
+
+def services(request):
+    row_names, data = list_request(request, 'get_service_types')
+    # is_ready_index = row_names.index('Best clienxt')
+    # for i, element in enumerate(data):
+    #     data[i] = list(data[i])
+    #     data[i][is_ready_index] = bool(element[is_ready_index])
+
+    return render(request, 'django_app/service_types_list.html',
+                  {"headers": row_names, "data": data})
+

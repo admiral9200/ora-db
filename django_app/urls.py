@@ -18,6 +18,9 @@ urlpatterns = [
         views.client_info, name='client_info'),
     url(r'check_client_info$', views.check_client_info,
         name='check_client_info'),
+    url(r'logout$', views.logout, name='logout'),
     url(r'login$', views.login, name='login'),
+    url(r'register$', views.register, name='register'),
+    url(r'services$', views.services, name='services'),
     url(r'$', views.index, name='index'),
 ]

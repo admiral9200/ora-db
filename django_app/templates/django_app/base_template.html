@@ -27,14 +27,29 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
 {#            <li><a href="{% url 'django_app:index' %}">Home</a></li>#}
-            <li><a href="#about">Register</a></li>
-            <li><a href="{% url 'django_app:login' %}">Login</a></li>
+            <li><a href="{% url 'django_app:register' %}">Register</a></li>
+            {% if request.COOKIES.username %}
+                <li><a href="{% url 'django_app:logout' %}">{{ request.COOKIES.username }} Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'django_app:login' %}">Login</a></li>
+            {% endif %}
             <li><a href="{% url 'django_app:offices' %}">Offices</a></li>
-            <li><a href="{% url 'django_app:check_order' %}">Check order status</a></li>
-            <li><a href="{% url 'django_app:check_client_orders' %}">Check client orders</a></li>
-            <li><a href="{% url 'django_app:check_client_orders_ready_not_returned' %}">Check ready orders</a></li>
-            <li><a href="{% url 'django_app:check_client_info' %}">Check client info</a></li>
+            <li><a href="{% url 'django_app:services' %}">Services</a></li>
+            {% if request.COOKIES.connection == 'user' %}
+                <li><a href="{% url 'django_app:client_orders' request.COOKIES.client_id %}">Check my orders</a></li>
+                <li><a href="{% url 'django_app:check_order'%}">Check order</a></li>
+                <li><a href="{% url 'django_app:client_info' request.COOKIES.client_id %}">Profile</a></li>
 
+            {% endif %}
+
+            {% if request.COOKIES.connection == 'worker' or request.COOKIES.connection == 'admin' %}
+                <li><a href="{% url 'django_app:check_order' %}">Check order status</a></li>
+                <li><a href="{% url 'django_app:check_client_orders' %}">Check client orders</a></li>
+                <li><a href="{% url 'django_app:check_client_orders_ready_not_returned' %}">Check ready orders</a></li>
+            {% endif %}
+            {% if request.COOKIES.connection == 'admin' %}
+                <li><a href="{% url 'django_app:check_client_info' %}">Check client info</a></li>
+            {% endif %}
           </ul>
         </div>
       </div>

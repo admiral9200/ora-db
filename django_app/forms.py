@@ -14,3 +14,8 @@ class LoginForm(forms.Form):
     login = forms.CharField(label='Login ', required=True)
     password = forms.CharField(widget=forms.PasswordInput, label='Password ')
 
+
+class RegistrationForm(forms.Form):
+    login = forms.CharField(label='Login ', required=True)
+    password = forms.CharField(widget=forms.PasswordInput, label='Password ', required=True)
+    client_id = forms.IntegerField(label='Client ID ', min_value=1, required=True)
