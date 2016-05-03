@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'login$', views.login, name='login'),
     url(r'register$', views.register, name='register'),
     url(r'services$', views.services, name='services'),
+    url(r'add_order$', views.order, name='add_order'),
     url(r'$', views.index, name='index'),
 ]

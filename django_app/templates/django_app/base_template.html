@@ -37,12 +37,15 @@
             <li><a href="{% url 'django_app:services' %}">Services</a></li>
             {% if request.COOKIES.connection == 'user' %}
                 <li><a href="{% url 'django_app:client_orders' request.COOKIES.client_id %}">Check my orders</a></li>
-                <li><a href="{% url 'django_app:check_order'%}">Check order</a></li>
+{#                <li><a href="{% url 'django_app:check_order'%}">Check order</a></li>#}
+                 <li><a href="{% url 'django_app:ready_not_returned_orders' request.COOKIES.client_id %}">Check ready orders</a></li>
+
                 <li><a href="{% url 'django_app:client_info' request.COOKIES.client_id %}">Profile</a></li>
 
             {% endif %}
 
             {% if request.COOKIES.connection == 'worker' or request.COOKIES.connection == 'admin' %}
+                <li><a href="{% url 'django_app:add_order' %}">Add order</a></li>
                 <li><a href="{% url 'django_app:check_order' %}">Check order status</a></li>
                 <li><a href="{% url 'django_app:check_client_orders' %}">Check client orders</a></li>
                 <li><a href="{% url 'django_app:check_client_orders_ready_not_returned' %}">Check ready orders</a></li>

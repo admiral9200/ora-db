@@ -4,9 +4,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from list_requests import list_request
-from .forms import OrderIdForm, ClientIdForm, LoginForm, RegistrationForm
+from .forms import OrderIdForm, ClientIdForm, LoginForm,\
+    RegistrationForm, OrderForm, OrderFormToValidate
 from registraton_authorization import login as logging_in
 from registraton_authorization import register as register_in_db
+from registraton_authorization import insert_order
+
 from errors import AccessDeniedError
 
 
@@ -202,4 +205,39 @@ def services(request):
 
     return render(request, 'django_app/service_types_list.html',
                   {"headers": row_names, "data": data})
+
+
+def order(request):
+    if request.method == 'POST':
+        #form = OrderForm(request.POST)
+        #form = request.POST['form']
+        print(request.POST)
+        form = OrderFormToValidate(request.POST)
+        if form.is_valid():
+            client_id = int(form.cleaned_data['client_id'])
+            service_type_id = int(form.cleaned_data['service_type_id'])
+            service_bonus_id = form.cleaned_data['service_bonus_id']
+            if service_bonus_id is not None:
+                service_bonus_id = int(service_bonus_id)
+
+            amount = int(form.cleaned_data['amount'])
+            office_id = int(form.cleaned_data['office_id'])
+            discount_type_id = form.cleaned_data['discount_type_id']
+            if discount_type_id is not None:
+                discount_type_id = int(discount_type_id)
+            worker_login = request.COOKIES['username']
+            print(worker_login)
+            if insert_order(request,client_id,service_type_id, service_bonus_id,
+                            office_id,worker_login, amount, discount_type_id):
+                resp = HttpResponseRedirect(reverse('django_app:index'))
+                resp.write(render(request, 'django_app/index.html'))
+                return resp
+        form = OrderForm(request=request)
+        return render(request, 'django_app/order_form.html',
+                        {"form": form, 'message': 'Invalid input'})
+    else:
+        form = OrderForm(request=request)
+        return render(request, 'django_app/order_form.html', {"form": form, 'message': None})
+
+
 

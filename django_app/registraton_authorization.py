@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import cx_Oracle
 from django.db import connections, connection
 from utils import execute_function
+import datetime
 
 current_connection = 'default'
 
@@ -78,4 +79,18 @@ def register(username, password, client_id):
     else:
         return False
 
+
+def insert_order(request, client_id, service_type_id, service_bonus_id, office_id,
+                 worker_login, amount,discount_type_id= None, acceptance_date=None):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function('insert_order'),
+                        [client_id, service_type_id, service_bonus_id,
+                            office_id, worker_login,discount_type_id,
+                            amount, acceptance_date])
+        return True
+    except cx_Oracle.DatabaseError:
+        return False
 

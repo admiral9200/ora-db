@@ -1,0 +1,15 @@
+{% extends 'django_app/base_template.html' %}
+{% block title %}Order form{% endblock %}
+{% block content %}
+
+    {% if message %}
+        {{ message }}
+    {% endif %}
+
+    <form action="{% url 'django_app:add_order' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input  class="btn" value="Create order" type="submit">
+    </form>
+
+{% endblock %}
