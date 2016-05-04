@@ -69,3 +69,14 @@ class OrderFormToValidate(forms.Form):
     amount = forms.IntegerField(label='Amount ', min_value=1, required=True)
     office_id = forms.IntegerField(label='Office', required=True)
     discount_type_id = forms.IntegerField(label='Discount ', required=False, min_value=1)
+
+
+class ClientForm(forms.Form):
+    first_name = forms.CharField(label='First Name', required=True)
+    last_name = forms.CharField(label='Last name', required=True)
+    # best_client = forms.ChoiceField(label='Best client', choices=[(1, 'True'), (0, 'False')])
+
+
+class ChangePasswordForm(forms.Form):
+    password_1 = forms.CharField(widget=forms.PasswordInput, label='Password new')
+    password_2 = forms.CharField(widget=forms.PasswordInput, label='Password new')

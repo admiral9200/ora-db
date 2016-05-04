@@ -30,6 +30,8 @@
             <li><a href="{% url 'django_app:register' %}">Register</a></li>
             {% if request.COOKIES.username %}
                 <li><a href="{% url 'django_app:logout' %}">{{ request.COOKIES.username }} Logout</a></li>
+                <li><a href="{% url 'django_app:change_password' %}">Change password</a></li>
+
             {% else %}
                 <li><a href="{% url 'django_app:login' %}">Login</a></li>
             {% endif %}
@@ -48,10 +50,14 @@
                 <li><a href="{% url 'django_app:add_order' %}">Add order</a></li>
                 <li><a href="{% url 'django_app:check_order' %}">Check order status</a></li>
                 <li><a href="{% url 'django_app:check_client_orders' %}">Check client orders</a></li>
-                <li><a href="{% url 'django_app:check_client_orders_ready_not_returned' %}">Check ready orders</a></li>
+                <li><a href="{% url 'django_app:check_client_orders_ready_not_returned' %}">Check client ready orders</a></li>
+                <li><a href="{% url 'django_app:all_ready_not_returned_orders' %}">All ready orders</a></li>
             {% endif %}
             {% if request.COOKIES.connection == 'admin' %}
                 <li><a href="{% url 'django_app:check_client_info' %}">Check client info</a></li>
+                <li><a href="{% url 'django_app:all_orders' %}">All orders</a></li>
+                <li><a href="{% url 'django_app:clients' %}">Clients</a></li>
+
             {% endif %}
           </ul>
         </div>

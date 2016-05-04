@@ -94,3 +94,50 @@ def insert_order(request, client_id, service_type_id, service_bonus_id, office_i
     except cx_Oracle.DatabaseError:
         return False
 
+
+def return_order(request, order_id):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function('update_order_return_date'), [int(order_id)])
+        return True
+    except cx_Oracle.DatabaseError:
+        return False
+
+
+def set_order_ready(request, order_id):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function('UPDATE_ORDER_READY_STATUS'), [int(order_id), 1])
+        return True
+    except cx_Oracle.DatabaseError:
+        return False
+
+
+def update_client(request,first_name, last_name, client_id):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function('UPDATE_CLIENT_INFO'), [first_name, last_name, int(client_id)])
+        return True
+    except cx_Oracle.DatabaseError:
+        return False
+
+
+def update_user_password(request,password):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function('update_user_password'), [request.COOKIES['username'], password])
+        return True
+    except cx_Oracle.DatabaseError:
+        return False
+
+
+
+

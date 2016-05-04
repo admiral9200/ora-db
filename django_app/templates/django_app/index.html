@@ -3,6 +3,10 @@
 {% block content %}
     <h1 class="header">Welcome home, bro!</h1>
 
+    {% if message%}
+        <h3 class="header">{{ message }}</h3>
+    {% endif%}
+
     <h2>There are some links for you to visit and get some info</h2>
 
     <ul class="list-group">

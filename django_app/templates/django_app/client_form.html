@@ -1,0 +1,11 @@
+{% extends 'django_app/base_template.html' %}
+{% block title %}Client updating{% endblock %}
+{% block content %}
+
+<form action="{% url 'django_app:update_client' id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn" type="submit" value="send">
+</form>
+
+{% endblock %}

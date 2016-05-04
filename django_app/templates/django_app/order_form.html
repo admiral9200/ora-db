@@ -3,7 +3,7 @@
 {% block content %}
 
     {% if message %}
-        {{ message }}
+        <h2 class="header">{{ message }}</h2><br/>
     {% endif %}
 
     <form action="{% url 'django_app:add_order' %}" method="post">

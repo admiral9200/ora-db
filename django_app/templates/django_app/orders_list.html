@@ -1,5 +1,5 @@
 {% extends "django_app/base_template.html" %}
-{% block title %}{% endblock %}
+{% block title %}Orders list{% endblock %}
 {% block content %}
 {% if error %}
     <h2 class="header">Access denied, peach!</h2>
@@ -21,9 +21,10 @@
                 {% for record_value in record %}
                     <td>{{ record_value }}</td>
                 {% endfor %}
-                {% if extra_thing %}
-                    <td><a href="{% url extra_thing.url record.0 %}">{{ extra_thing.text}}</a></td>
-                {% endif %}
+{#                <td><a href="{% url 'django_app:edit_order' record.0 %}">Edit</a></td>#}
+                <td><a href="{% url 'django_app:set_order_ready_status' record.0  %}">Set ready</a></td>
+                <td><a href="{% url 'django_app:return_order' record.0  %}">Return order</a></td>
+
                 </tr>
             {% endfor %}
             </tbody>
