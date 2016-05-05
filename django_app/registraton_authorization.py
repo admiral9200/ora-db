@@ -128,15 +128,62 @@ def update_client(request,first_name, last_name, client_id):
         return False
 
 
-def update_user_password(request,password):
+def update_user_password(request, username, password):
     current_connection = request.COOKIES['connection']
     connections[current_connection].connect()
     cursor = connections[current_connection].cursor()
     try:
-        cursor.callproc(execute_function('update_user_password'), [request.COOKIES['username'], password])
+        cursor.callproc(execute_function('update_user_password'), [username, password])
         return True
     except cx_Oracle.DatabaseError:
         return False
+
+
+def create_user_in_db(request, login, password, role):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function('insert_user'), [login, password, int(role), None])
+        return True
+    except cx_Oracle.DatabaseError as e:
+        print(e)
+        return False
+
+
+def create_bonus_in_db(request, type, value):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function('insert_bonus'), [type, value])
+        return True
+    except cx_Oracle.DatabaseError as e:
+        print(e)
+        return False
+
+
+def call_function_in_db(request, func_name, args = None):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        return cursor.callfunc(execute_function(func_name), args)
+    except cx_Oracle.DatabaseError as e:
+        return False
+
+
+def call_procedure_in_db(request, func_name, args = None):
+    current_connection = request.COOKIES['connection']
+    connections[current_connection].connect()
+    cursor = connections[current_connection].cursor()
+    try:
+        cursor.callproc(execute_function(func_name), args)
+        return True
+    except cx_Oracle.DatabaseError as e:
+        return False
+
+
 
 
 

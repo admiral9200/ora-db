@@ -1,0 +1,14 @@
+{% extends 'django_app/base_template.html' %}
+{% block title %}Create user{% endblock %}
+{% block content %}
+
+    {% if message %}
+        <h3 class="header">{{ message }}</h3>
+    {% endif %}
+<form action="{% url url_ %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn" type="submit" value="Create">
+</form>
+
+{% endblock %}

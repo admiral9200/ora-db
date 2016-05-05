@@ -1,0 +1,11 @@
+{% extends 'django_app/base_template.html' %}
+{% block title %}Create user{% endblock %}
+{% block content %}
+
+<form action="{% url 'django_app:create_user' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input class="btn" type="submit" value="Create">
+</form>
+
+{% endblock %}

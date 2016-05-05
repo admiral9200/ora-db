@@ -47,7 +47,11 @@
             {% endif %}
 
             {% if request.COOKIES.connection == 'worker' or request.COOKIES.connection == 'admin' %}
-                <li><a href="{% url 'django_app:add_order' %}">Add order</a></li>
+                {% if request.COOKIES.connection == 'worker' %}
+                    <li><a href="{% url 'django_app:add_order' %}">Add order</a></li>
+                {% endif %}
+                <li><a href="{% url 'django_app:create_client' %}">Create client</a></li>
+
                 <li><a href="{% url 'django_app:check_order' %}">Check order status</a></li>
                 <li><a href="{% url 'django_app:check_client_orders' %}">Check client orders</a></li>
                 <li><a href="{% url 'django_app:check_client_orders_ready_not_returned' %}">Check client ready orders</a></li>
@@ -56,7 +60,16 @@
             {% if request.COOKIES.connection == 'admin' %}
                 <li><a href="{% url 'django_app:check_client_info' %}">Check client info</a></li>
                 <li><a href="{% url 'django_app:all_orders' %}">All orders</a></li>
+                <li><a href="{% url 'django_app:get_bonuses' %}">All bonuses</a></li>
+
                 <li><a href="{% url 'django_app:clients' %}">Clients</a></li>
+                <li><a href="{% url 'django_app:create_user' %}">Create user</a></li>
+                <li><a href="{% url 'django_app:create_bonus' %}">Create bonus</a></li>
+
+                <li><a href="{% url 'django_app:get_discounts' %}">All discounts</a></li>
+                <li><a href="{% url 'django_app:create_discount' %}">Create discount</a></li>
+                 <li><a href="{% url 'django_app:create_service' %}">Create service</a></li>
+                <li><a href="{% url 'django_app:create_office' %}">Create office</a></li>
 
             {% endif %}
           </ul>

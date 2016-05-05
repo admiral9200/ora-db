@@ -14,7 +14,10 @@ def list_request(request, function_name, args=list()):
     #print(connection.cursor().db.connect())
     # print(dir(connection.connect))
     # login('kagura', 'password')
-    current_connection = request.COOKIES['connection']
+    if request.COOKIES.has_key('connection'):
+        current_connection = request.COOKIES['connection']
+    else:
+        current_connection = 'default'
 
     try:
         cursor = connections[current_connection].cursor()

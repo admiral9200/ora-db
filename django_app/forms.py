@@ -80,3 +80,29 @@ class ClientForm(forms.Form):
 class ChangePasswordForm(forms.Form):
     password_1 = forms.CharField(widget=forms.PasswordInput, label='Password new')
     password_2 = forms.CharField(widget=forms.PasswordInput, label='Password new')
+
+
+class CreateUserForm(forms.Form):
+    login = forms.CharField(required=True)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    role = forms.ChoiceField(required=True, choices=[[1,'admin'], [2,'worker'], [3,'user']])
+
+
+class BonusForm(forms.Form):
+    type = forms.CharField(required=True, label='Type ')
+    value = forms.FloatField(min_value=0, max_value=100, label='Bonus value', required=True)
+
+
+class DiscountForm(forms.Form):
+    description = forms.CharField(required=True, label='Type ')
+    value = forms.FloatField(min_value=0, max_value=100, label='Bonus value', required=True)
+
+
+class ServiceForm(forms.Form):
+    name = forms.CharField(required=True, label='Name ')
+    price = forms.FloatField(min_value=0, label='Base price ', required=True)
+
+
+class OfficeForm(forms.Form):
+    location = forms.CharField(required=True, label='Location ')
+    description = forms.CharField(label='Description ', required=True)
