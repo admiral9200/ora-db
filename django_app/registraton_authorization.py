@@ -44,6 +44,7 @@ def logout(request):
 
 
 def login(username, password):
+    # TODO: check for returning user ib db
     # connection_name = request.session.get('connection', 'default')
     cookie_dict = {}
     cursor = connections['default'].cursor()
@@ -144,7 +145,8 @@ def create_user_in_db(request, login, password, role):
     connections[current_connection].connect()
     cursor = connections[current_connection].cursor()
     try:
-        cursor.callproc(execute_function('insert_user'), [login, password, int(role), None])
+        role_id = cursor.callfunc(execute_function('get_role_id_by_name'), cx_Oracle.NUMBER, [role])
+        cursor.callproc(execute_function('insert_user'), [login, password, int(role_id), None])
         return True
     except cx_Oracle.DatabaseError as e:
         print(e)
@@ -182,9 +184,3 @@ def call_procedure_in_db(request, func_name, args = None):
         return True
     except cx_Oracle.DatabaseError as e:
         return False
-
-
-
-
-
-

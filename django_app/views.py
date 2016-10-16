@@ -397,7 +397,7 @@ def create_user(request):
 
 def create_bonus(request):
     if request.method == 'POST':
-        form = ServiceForm(request.POST)
+        form = BonusForm(request.POST)
         if form.is_valid():
             type = form.cleaned_data['type']
             value = form.cleaned_data['value']
@@ -409,7 +409,7 @@ def create_bonus(request):
         else:
             return render(request, 'django_app/form_template.html', {'form': form, 'message': 'form is invalid'})
     else:
-        form = ServiceForm()
+        form = BonusForm()
         return render(request, 'django_app/bonus_form.html', {'form': form})
 
 

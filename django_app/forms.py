@@ -85,7 +85,7 @@ class ChangePasswordForm(forms.Form):
 class CreateUserForm(forms.Form):
     login = forms.CharField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
-    role = forms.ChoiceField(required=True, choices=[[1,'admin'], [2,'worker'], [3,'user']])
+    role = forms.ChoiceField(required=True, choices=[['admin', 'admin'], ['worker', 'worker'], ['user', 'user']])
 
 
 class BonusForm(forms.Form):

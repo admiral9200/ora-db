@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'bdsm_django.wsgi.application'
 DATABASES = {
     'admin': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'oracledb',
+        'NAME': 'orcl',
         'USER': 'c##nexemjail',
         'PASSWORD': 'oraclepassword',
         'HOST': '',
@@ -89,7 +89,7 @@ DATABASES = {
     },
     'worker': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'oracledb',
+        'NAME': 'orcl',
         'USER': 'c##worker_connection',
         'PASSWORD': 'password',
         'HOST': '',
@@ -100,7 +100,7 @@ DATABASES = {
     },
     'user': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'oracledb',
+        'NAME': 'orcl',
         'USER': 'c##user_connection',
         'PASSWORD': 'password',
         'HOST': '',
@@ -111,7 +111,7 @@ DATABASES = {
     },
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'oracledb',
+        'NAME': 'orcl',
         'USER': 'c##guest_connection',
         'PASSWORD': 'password',
         'HOST': '',
@@ -154,7 +154,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
