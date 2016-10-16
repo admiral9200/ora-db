@@ -1,0 +1,2 @@
+16.10.16 15:26:56,273000 +03:00    ORA-20000: Error while inserting a user!
+16-OCT-16 06.19.52.676000 PM +03:00    ORA-20014: Error while inserting a user!
