@@ -162,8 +162,8 @@ begin
   where id = order_id;
 end;
 / 
-drop procedure update_orders_bonus_id;
-/
+--drop procedure update_orders_bonus_id;
+--/
 create or replace procedure update_order_office(order_id integer, new_office integer)
 AS
 begin

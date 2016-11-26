@@ -13,15 +13,15 @@ def list_request(request, function_name, args=list()):
     #print(dir(connection.cursor().db.connection.username))
     #print(connection.cursor().db.connect())
     # print(dir(connection.connect))
-    # login('kagura', 'password')
-    if request.COOKIES.has_key('connection'):
+    # login('kagura', 'passwordlsnrctl stat ')
+    if request.COOKIES. has_key('connection'):
         current_connection = request.COOKIES['connection']
     else:
         current_connection = 'default'
 
     try:
         cursor = connections[current_connection].cursor()
-        print(connections[current_connection].connection.username)
+        # print(connections[current_connection].connection.username)
         client_cursor = cursor.callfunc(execute_function(function_name), cx_Oracle.CURSOR, args)
 
         data = client_cursor.fetchall()

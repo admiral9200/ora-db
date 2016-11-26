@@ -84,6 +84,8 @@ grant execute on c##nexemjail.GET_SERVICE_TYPES to c##guest;
 grant execute on c##nexemjail.GET_USER_ROLE to c##guest;
 -- THIS IS NOT WORKING!!!!!
 grant execute on c##nexemjail.create_user to c##guest;
+
+
 grant execute on c##nexemjail.register_user to c##guest;
 create user c##guest_connection identified by password;
 

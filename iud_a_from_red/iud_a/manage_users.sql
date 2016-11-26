@@ -60,43 +60,6 @@ begin
   return role_name;
 end;
 /
-
---need insert user; -- +
-create or replace function register_user(u_login varchar,
-                                        u_password varchar,
-                                        u_client_id integer)
-                                      return boolean
-as
-  user_record users%rowtype := null;
-  role_ integer;
-  pass_hash integer;
-begin
-
-  select ora_hash(u_password)
-    into pass_hash
-    from dual;
-  
-  select *
-    into user_record
-    from users
-    where users.LOGIN = u_login;
-  
-  return false;
-  
-  exception
-    when NO_DATA_FOUND then
-      select roles.id
-        into role_
-        from roles
-        where ROLES.NAME like '%user%';
-    
-      INSERT_USER(u_login, u_password, role_, u_client_id);
-      commit;
-      return true;
-      
-end;
-/
- -- +
 create or replace procedure insert_user(u_login varchar, u_password varchar,
                           u_role_id integer, u_client_id integer)
 as
@@ -140,39 +103,44 @@ begin
         raise_application_error(SQLCODE, SQLERRM || 'Error while inserting a user!');
 end;
 /
+--need insert user; -- +
+create or replace function register_user(u_login varchar,
+                                        u_password varchar,
+                                        u_client_id integer)
+                                      return boolean
+as
+  user_record users%rowtype := null;
+  role_ integer;
+  pass_hash integer;
+begin
 
-create or replace function check_client_exists(u_client_id integer)
-  return boolean as
-  cl_id integer;
-  begin
-    select ID INTO cl_id
-      from CLIENTS
-      where CLIENTS.ID = u_client_id;
-    return true;
-  exception
-    when TOO_MANY_ROWS then
-      return false;
-    when NO_DATA_FOUND then
-      return false;
-  end;
-/
-
-create or replace function check_user_for_client_exists(u_client_id integer)
-                                                       return boolean as
-  user_record users%rowtype := null;                                                       
-  begin
+  select ora_hash(u_password)
+    into pass_hash
+    from dual;
+  
   select *
     into user_record
     from users
-    where users.Client_ID = u_client_id;
-  return true;  
+    where users.LOGIN = u_login;
+  
+  return false;
+  
   exception
-    when TOO_MANY_ROWS then
-      return true;
     when NO_DATA_FOUND then
-      return false;
-  end;
+      select roles.id
+        into role_
+        from roles
+        where ROLES.NAME like '%user%';
+    
+      INSERT_USER(u_login, u_password, role_, u_client_id);
+      commit;
+      return true;
+      
+end;
 /
+ -- +
+
+
 
 
 

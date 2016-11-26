@@ -47,19 +47,24 @@ class OrderForm(forms.Form):
         if request:
 
             _, data = list_request(request, 'get_service_types')
-            self.fields['service_type_id'].choices = [(int(element[0]), ' '.join(map(str, element[1:]))) for element in data]
+            self.fields['service_type_id'].choices = [(int(element[0]),
+                                                       ' '.join(map(str, element[1:]))) for element in data]
 
             _, data = list_request(request, 'get_bonuses')
-            self.fields['service_bonus_id'].choices = [(int(element[0]), ' '.join(map(str, element[1:]))) for element in data] + [(None, "None")]
+            self.fields['service_bonus_id'].choices = [(int(element[0]),
+                                                        ' '.join(map(str, element[1:]))) for element in data] + [(None, "None")]
 
             _, data = list_request(request, 'get_clients')
-            self.fields['client_id'].choices = [(int(element[0]), ' '.join(map(str, element[1:]))) for element in data]
+            self.fields['client_id'].choices = [(int(element[0]),
+                                                 ' '.join(map(str, element[1:]))) for element in data]
 
             _, data = list_request(request, 'get_discount_types')
-            self.fields['discount_type_id'].choices = [(int(element[0]), ' '.join(map(str, element[1:]))) for element in data]  + [(None, "None")]
+            self.fields['discount_type_id'].choices = [(int(element[0]),
+                                                        ' '.join(map(str, element[1:]))) for element in data]  + [(None, "None")]
 
             _, data = list_request(request, 'get_offices')
-            self.fields['office_id'].choices = [(int(element[0]), ' '.join(map(str, element[1:]))) for element in data]
+            self.fields['office_id'].choices = [(int(element[0]),
+                                                 ' '.join(map(str, element[1:]))) for element in data]
 
 
 class OrderFormToValidate(forms.Form):

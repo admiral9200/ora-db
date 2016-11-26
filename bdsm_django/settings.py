@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'bdsm_django.wsgi.application'
 DATABASES = {
     'admin': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
+        'NAME': 'orcldb',
         'USER': 'c##nexemjail',
         'PASSWORD': 'oraclepassword',
         'HOST': '',
@@ -89,7 +89,7 @@ DATABASES = {
     },
     'worker': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
+        'NAME': 'orcldb',
         'USER': 'c##worker_connection',
         'PASSWORD': 'password',
         'HOST': '',
@@ -100,7 +100,7 @@ DATABASES = {
     },
     'user': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
+        'NAME': 'orcldb',
         'USER': 'c##user_connection',
         'PASSWORD': 'password',
         'HOST': '',
@@ -111,7 +111,7 @@ DATABASES = {
     },
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
+        'NAME': 'orcldb',
         'USER': 'c##guest_connection',
         'PASSWORD': 'password',
         'HOST': '',

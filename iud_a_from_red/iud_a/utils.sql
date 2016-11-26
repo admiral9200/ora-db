@@ -1,4 +1,17 @@
-drop function check_client_exists;
+--drop function check_client_exists;
+create or replace function check_order_exists(order_id integer) return boolean
+as
+  temp_id integer;
+begin
+  select id
+  into temp_id
+  from orders
+  where ID = order_id;
+  return true;
+  exception
+    when no_data_found then
+      return false;
+end;
 /
 select * from roles;
 
@@ -40,20 +53,6 @@ begin
   into temp_id
   from bonuses
   where ID = id_;
-  return true;
-  exception
-    when no_data_found then
-      return false;
-end;
-/
-create or replace function check_order_exists(order_id integer) return boolean
-as
-  temp_id integer;
-begin
-  select id
-  into temp_id
-  from orders
-  where ID = order_id;
   return true;
   exception
     when no_data_found then
