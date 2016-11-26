@@ -13,7 +13,7 @@ from __future__ import unicode_literals
 
 import os
 
-from bdsm_django.db_config import database_configuration
+from bdsm_django.db_config import database_configuration, default_user
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -119,4 +119,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-DEFAULT_USER = 'nexemjail'
+DEFAULT_USER = default_user

@@ -65,3 +65,5 @@ role_connection_dict = {
         'password'
     ]
 }
+
+default_user = 'c##nexemjail'
