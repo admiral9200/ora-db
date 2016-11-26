@@ -28,9 +28,8 @@ def change_password(request):
                 if update_user_password(request, request.COOKIES['username'], p1):
                     return render(request, 'django_app/index.html', {'message': 'changed!'})
         return render(request, 'django_app/update_pass_form.html', {'form': form, 'message': 'invalid_form'})
-    else:
-        form = ChangePasswordForm()
-        return render(request, 'django_app/update_pass_form.html', {'form' : form})
+    form = ChangePasswordForm()
+    return render(request, 'django_app/update_pass_form.html', {'form' : form})
 
 
 def get_clients(request):
@@ -54,16 +53,14 @@ def update_client(request, client_id):
                 resp = HttpResponseRedirect(reverse('django_app:index'))
                 resp.write(render(request, 'django_app/index.html', {'message': 'client updated'}))
                 return resp
-            else:
-                resp = HttpResponseRedirect(reverse('django_app:index'))
-                resp.write(render(request, 'django_app/index.html', {'message': 'Error while updating'}))
-                return resp
+            resp = HttpResponseRedirect(reverse('django_app:index'))
+            resp.write(render(request, 'django_app/index.html', {'message': 'Error while updating'}))
+            return resp
         return render(request, 'django_app/client_form.html', {'form': form, 'id': client_id})
 
-    else:
-        row_names, record = list_request(request, 'client_info', [int(client_id)])
-        form = ClientForm(data={'first_name': record[0][1], 'last_name': record[0][2], 'best_client': record[0][3]})
-        return render(request, 'django_app/client_form.html', {'form': form, 'id' : record[0][0]})
+    row_names, record = list_request(request, 'client_info', [int(client_id)])
+    form = ClientForm(data={'first_name': record[0][1], 'last_name': record[0][2], 'best_client': record[0][3]})
+    return render(request, 'django_app/client_form.html', {'form': form, 'id': record[0][0]})
 
 
 def client_info(request, client_id):
@@ -102,17 +99,15 @@ def update_office(request, office_id):
             value = form.cleaned_data['description']
             if call_procedure_in_db(request, 'update_office_by_id', [int(office_id), description, value]):
                 return render(request, 'django_app/index.html', {'message': 'office updated'})
-            else:
-                return render(request, 'django_app/index.html', {'message': 'Error while updating'})
+            return render(request, 'django_app/index.html', {'message': 'Error while updating'})
         return render(request, 'django_app/edit_form_template.html',
                       {'form': form, 'id': office_id,
                        'url_': 'django_app:update_office'})
 
-    else:
-        row_names, record = list_request(request, 'get_office_by_id', [int(office_id)])
-        form = OfficeForm(data={'location': record[0][1], 'description': record[0][2]})
-        return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': office_id,
-                                                                      'url_': 'django_app:update_office'})
+    row_names, record = list_request(request, 'get_office_by_id', [int(office_id)])
+    form = OfficeForm(data={'location': record[0][1], 'description': record[0][2]})
+    return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': office_id,
+                                                                  'url_': 'django_app:update_office'})
 
 
 def index(request):
@@ -140,9 +135,8 @@ def check_order(request):
         if form.is_valid():
             order_id = form.cleaned_data['order_id']
             return HttpResponseRedirect(reverse('django_app:order', args=(order_id,)))
-    else:
-        form = OrderIdForm()
-        return render(request, 'django_app/check_order.html', {"form": form})
+    form = OrderIdForm()
+    return render(request, 'django_app/check_order.html', {"form": form})
 
 
 def client_orders(request, client_id):
@@ -166,9 +160,8 @@ def check_client_orders(request):
         if form.is_valid():
             client_id = form.cleaned_data['client_id']
             return HttpResponseRedirect(reverse('django_app:client_orders', args=(client_id,)))
-    else:
-        form = ClientIdForm()
-        return render(request, 'django_app/check_client_orders.html', {"form": form})
+    form = ClientIdForm()
+    return render(request, 'django_app/check_client_orders.html', {"form": form})
 
 
 def all_ready_not_returned_orders(request):
@@ -211,9 +204,8 @@ def check_client_orders_ready_not_returned(request):
         if form.is_valid():
             client_id = form.cleaned_data['client_id']
             return HttpResponseRedirect(reverse('django_app:ready_not_returned_orders', args=(client_id,)))
-    else:
-        form = ClientIdForm()
-        return render(request, 'django_app/check_orders_ready_not_returned.html', {"form": form})
+    form = ClientIdForm()
+    return render(request, 'django_app/check_orders_ready_not_returned.html', {"form": form})
 
 
 def check_client_info(request):
@@ -222,9 +214,8 @@ def check_client_info(request):
         if form.is_valid():
             client_id = form.cleaned_data['client_id']
             return HttpResponseRedirect(reverse('django_app:client_info', args=(client_id,)))
-    else:
-        form = ClientIdForm()
-        return render(request, 'django_app/check_client_info.html', {"form": form})
+    form = ClientIdForm()
+    return render(request, 'django_app/check_client_info.html', {"form": form})
 
 
 def logout(request):
@@ -232,7 +223,6 @@ def logout(request):
     resp.delete_cookie('username')
     resp.delete_cookie('connection')
     resp.delete_cookie('client_id')
-    # resp.write(render(request, 'django_app/index.html'))
     return resp
 
 
@@ -240,10 +230,8 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['login']
-            password = form.cleaned_data['password']
 
-            login_successful, cookie_values = logging_in(username, password)
+            login_successful, cookie_values = logging_in(form.cleaned_data['login'], form.cleaned_data['password'])
             if login_successful:
                 resp = HttpResponseRedirect(reverse('django_app:index'))
                 resp.set_cookie('username', cookie_values['username'])
@@ -251,65 +239,53 @@ def login(request):
                 resp.set_cookie('client_id', cookie_values['client_id'])
                 resp.write(render(request, 'django_app/index.html', ))
                 return resp
-            else:
-                return render(request, 'django_app/login_form.html',
-                      {"form": form, "message": 'Login failed'})
-        else:
             return render(request, 'django_app/login_form.html',
-                            {"form": form, "message": 'Invalid form!'})
-    else:
-        form = LoginForm()
-        return render(request, 'django_app/login_form.html', {"form": form, "message": None})
+                  {"form": form, "message": 'Login failed'})
+        return render(request, 'django_app/login_form.html',
+                        {"form": form, "message": 'Invalid form!'})
+    form = LoginForm()
+    return render(request, 'django_app/login_form.html', {"form": form, "message": None})
 
 
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['login']
-            password = form.cleaned_data['password']
-            client_id = form.cleaned_data['client_id']
-            if register_in_db(username, password, int(client_id)):
+            if register_in_db(form.cleaned_data['login'],
+                              form.cleaned_data['password'],
+                              form.cleaned_data['client_id']):
                 resp = HttpResponseRedirect(reverse('django_app:index'))
                 resp.write(render(request, 'django_app/index.html'))
                 return resp
-        else:
-            return render(request, 'django_app/registration_form.html',
-                          {"form": form, 'message': 'Invalid input'})
-    else:
-        form = RegistrationForm()
-        return render(request, 'django_app/registration_form.html', {"form": form, 'message': None})
+        return render(request, 'django_app/registration_form.html',
+                      {"form": form, 'message': 'Invalid input'})
+
+    form = RegistrationForm()
+    return render(request, 'django_app/registration_form.html', {"form": form, 'message': None})
 
 
 def update_service(request, service_id):
     if request.method == 'POST':
         form = ServiceForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            price = float(form.cleaned_data['price'])
-            if call_procedure_in_db(request, 'update_service_by_id', [int(service_id), name, price]):
+            if call_procedure_in_db(request, 'update_service_by_id',
+                                    [int(service_id), form.cleaned_data['name'], form.cleaned_data['price']]):
                 return render(request, 'django_app/index.html', {'message': 'service updated'})
-            else:
-                return render(request, 'django_app/index.html', {'message': 'Error while updating'})
+            return render(request, 'django_app/index.html', {'message': 'Error while updating'})
         return render(request, 'django_app/edit_form_template.html',
                       {'form': form, 'id': service_id,
                        'url_': 'django_app:update_service'})
 
-    else:
-        row_names, record = list_request(request, 'get_service_by_id', [int(service_id)])
-        form = ServiceForm(data={'name': record[0][1], 'price': record[0][2]})
-        return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': service_id,
-                                                                      'url_': 'django_app:update_service'})
+    row_names, record = list_request(request, 'get_service_by_id', [int(service_id)])
+    form = ServiceForm(data={'name': record[0][1], 'price': record[0][2]})
+    return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': service_id,
+                                                                  'url_': 'django_app:update_service'})
 
 
 def services(request):
     row_names, data = list_request(request, 'get_service_types')
-    # is_ready_index = row_names.index('Best clienxt')
-    # for i, element in enumerate(data):
-    #     data[i] = list(data[i])
-    #     data[i][is_ready_index] = bool(element[is_ready_index])
     extra_thing = None
-    if request.COOKIES.has_key('connection') and request.COOKIES['connection'] == 'admin':
+    if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'admin':
         extra_thing = {'url': 'django_app:update_service', 'text': 'Edit service'}
     return render(request, 'django_app/service_types_list.html',
                   {"headers": row_names, "data": data, "extra_thing": extra_thing})
@@ -317,43 +293,25 @@ def services(request):
 
 def order(request):
     if request.method == 'POST':
-        #form = OrderForm(request.POST)
-        #form = request.POST['form']
-        print(request.POST)
         form = OrderFormToValidate(request.POST)
         if form.is_valid():
-            client_id = int(form.cleaned_data['client_id'])
-            service_type_id = int(form.cleaned_data['service_type_id'])
-            service_bonus_id = form.cleaned_data['service_bonus_id']
-            if service_bonus_id is not None:
-                service_bonus_id = int(service_bonus_id)
+            if insert_order(request,
+                            form.cleaned_data['client_id'],
+                            form.cleaned_data['service_type_id'],
+                            form.cleaned_data['service_bonus_id'] or None,
+                            form.cleaned_data['office_id'],
+                            request.COOKIES['username'],
+                            form.cleaned_data['amount'],
+                            form.cleaned_data['discount_type_id'] or None):
 
-            amount = int(form.cleaned_data['amount'])
-            office_id = int(form.cleaned_data['office_id'])
-            discount_type_id = form.cleaned_data['discount_type_id']
-            if discount_type_id is not None:
-                discount_type_id = int(discount_type_id)
-            worker_login = request.COOKIES['username']
-            print(worker_login)
-            if insert_order(request,client_id,service_type_id, service_bonus_id,
-                            office_id,worker_login, amount, discount_type_id):
-                # resp = HttpResponseRedirect(reverse('django_app:index'))
                 resp = render(request, 'django_app/index.html', {"message": 'Order added successfully'})
                 return resp
         form = OrderForm(request=request)
         return render(request, 'django_app/order_form.html',
-                        {"form": form, 'message': 'Invalid input'})
-    else:
-        form = OrderForm(request=request)
-        return render(request, 'django_app/order_form.html', {"form": form, 'message': None})
+                      {"form": form, 'message': 'Invalid input'})
 
-
-# def edit_order(request, order_id):
-#     # if request.method == 'POST':
-#     # form = OrderForm(request=request)
-#     order_id = int(order_id)
-#     print(order_id)
-#     return render(request, 'django_app/index.html',   {'message': 'got ' + str(order_id)})
+    form = OrderForm(request=request)
+    return render(request, 'django_app/order_form.html', {"form": form, 'message': None})
 
 
 def all_orders(request):
@@ -372,35 +330,28 @@ def return_order(request, order_id):
     order_id = int(order_id)
     if set_order_status_to_returned(request, order_id):
         return render(request, 'django_app/index.html', {'message': "Order returned!"})
-    else:
-        return render(request, 'django_app/index.html', {'message':
-                                                             "error while setting status to order"})
+    return render(request, 'django_app/index.html', {'message': "Error while setting status to order"})
 
 
 def create_user(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST, request=request)
         if form.is_valid():
-            login = form.cleaned_data['login']
-            password = form.cleaned_data['password']
-            role = form.cleaned_data['role']
-            if create_user_in_db(request, login, password, role):
-                return render(request,'django_app/index.html', {'message': 'User created!'})
-            else:
-                return render(request, 'django_app/index.html', {'message': 'Error occured!'})
+            if create_user_in_db(request, form.cleaned_data['login'],
+                                 form.cleaned_data['password'],
+                                 form.cleaned_data['role']):
+                return render(request, 'django_app/index.html', {'message': 'User created!'})
+            return render(request, 'django_app/index.html', {'message': 'Error occurred!'})
         return render(request, 'django_app/create_user_form.html', {'form': form})
-    else:
-        form = CreateUserForm(request=request)
-        return render(request, 'django_app/create_user_form.html', {'form': form})
+    form = CreateUserForm(request=request)
+    return render(request, 'django_app/create_user_form.html', {'form': form})
 
 
 def create_bonus(request):
     if request.method == 'POST':
         form = BonusForm(request.POST)
         if form.is_valid():
-            type = form.cleaned_data['type']
-            value = form.cleaned_data['value']
-            if create_bonus_in_db(request, type, value):
+            if create_bonus_in_db(request, form.cleaned_data['type'], form.cleaned_data['value']):
                 return render(request, 'django_app/index.html', {'message': 'bonus created'})
             else:
                 return render(request, 'django_app/index.html', {'message': 'Error while creating a bonus'})
@@ -425,9 +376,8 @@ def update_bonus(request, bonus_id):
     if request.method == 'POST':
         form = BonusForm(request.POST)
         if form.is_valid():
-            type = form.cleaned_data['type']
-            value = float(form.cleaned_data['value'])
-            if call_procedure_in_db(request, 'update_bonus_by_id', [int(bonus_id), type, value]):
+            if call_procedure_in_db(request, 'update_bonus_by_id',
+                                    [int(bonus_id), form.cleaned_data['type'], form.cleaned_data['value']]):
                 return render(request, 'django_app/index.html', {'message': 'bonus updated'})
             else:
                 return render(request, 'django_app/index.html', {'message': 'Error while updating'})
@@ -441,24 +391,21 @@ def update_bonus(request, bonus_id):
         return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': bonus_id,
                                                                       'url_': 'django_app:update_bonus'})
 
+
 def create_discount(request):
     if request.method == 'POST':
         form = DiscountForm(request.POST)
         if form.is_valid():
-            description = form.cleaned_data['description']
-            value = form.cleaned_data['value']
-            if call_procedure_in_db(request, 'insert_discount_type', [description, value]):
+            if call_procedure_in_db(request, 'insert_discount_type',
+                                    [form.cleaned_data['description'], form.cleaned_data['value']]):
                 return render(request, 'django_app/index.html', {'message': 'discount created'})
             else:
                 return render(request, 'django_app/index.html', {'message': 'Error while creating a discount'})
-
-        else:
-            return render(request, 'django_app/form_template.html', {'form': form,
-                                                                          'url_': 'django_app:create_discount',
-                                                                          'message': 'form is invalid'})
-    else:
-        form = DiscountForm()
-        return render(request, 'django_app/form_template.html', {'form': form,'url_': 'django_app:create_discount'})
+        return render(request, 'django_app/form_template.html', {'form': form,
+                                                                 'url_': 'django_app:create_discount',
+                                                                 'message': 'form is invalid'})
+    form = DiscountForm()
+    return render(request, 'django_app/form_template.html', {'form': form, 'url_': 'django_app:create_discount'})
 
 
 def get_discounts(request):
@@ -474,9 +421,8 @@ def update_discount(request, discount_id):
     if request.method == 'POST':
         form = DiscountForm(request.POST)
         if form.is_valid():
-            description = form.cleaned_data['description']
-            value = float(form.cleaned_data['value'])
-            if call_procedure_in_db(request, 'update_discount_by_id', [int(discount_id), description, value]):
+            if call_procedure_in_db(request, 'update_discount_by_id',
+                                    [int(discount_id), form.cleaned_data['description'], form.cleaned_data['value']]):
                 return render(request, 'django_app/index.html', {'message': 'discount updated'})
             else:
                 return render(request, 'django_app/index.html', {'message': 'Error while updating'})
@@ -484,32 +430,27 @@ def update_discount(request, discount_id):
                       {'form': form, 'id': discount_id,
                        'url_': 'django_app:update_discount'})
 
-    else:
-        row_names, record = list_request(request, 'get_discount_by_id', [int(discount_id)])
-        form = DiscountForm(data={'description': record[0][1], 'value': record[0][2]})
-        return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': discount_id,
-                                                                      'url_': 'django_app:update_discount'})
+    row_names, record = list_request(request, 'get_discount_by_id', [int(discount_id)])
+    form = DiscountForm(data={'description': record[0][1], 'value': record[0][2]})
+    return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': discount_id,
+                                                                  'url_': 'django_app:update_discount'})
 
 
 def create_service(request):
     if request.method == 'POST':
         form = ServiceForm(request.POST)
         if form.is_valid():
-            name = form.cleaned_data['name']
-            price = form.cleaned_data['price']
-            if call_procedure_in_db(request, 'insert_service_type', [name, price]):
+            if call_procedure_in_db(request, 'insert_service_type',
+                                    [form.cleaned_data['name'], form.cleaned_data['price']]):
                 return render(request, 'django_app/index.html', {'message': 'service created'})
-            else:
-                return render(request, 'django_app/index.html', {'message': 'Error while creating a service'})
+            return render(request, 'django_app/index.html', {'message': 'Error while creating a service'})
 
-        else:
-            return render(request, 'django_app/form_template.html', {'form': form,
-                                                                          'url_': 'django_app:create_service',
-                                                                          'message': 'form is invalid'})
-    else:
-        form = ServiceForm()
-        return render(request, 'django_app/form_template.html',
-                      {'form': form,'url_': 'django_app:create_service'})
+        return render(request, 'django_app/form_template.html', {'form': form,
+                                                                 'url_': 'django_app:create_service',
+                                                                 'message': 'form is invalid'})
+    form = ServiceForm()
+    return render(request, 'django_app/form_template.html',
+                  {'form': form, 'url_': 'django_app:create_service'})
 
 
 def create_office(request):
@@ -520,35 +461,27 @@ def create_office(request):
             description = form.cleaned_data['description']
             if call_procedure_in_db(request, 'insert_office', [location, description]):
                 return render(request, 'django_app/index.html', {'message': 'service created'})
-            else:
-                return render(request, 'django_app/index.html', {'message': 'Error while creating a service'})
+            return render(request, 'django_app/index.html', {'message': 'Error while creating a service'})
 
-        else:
-            return render(request, 'django_app/form_template.html', {'form': form,
-                                                                          'url_': 'django_app:create_office',
-                                                                          'message': 'form is invalid'})
-    else:
-        form = OfficeForm()
-        return render(request, 'django_app/form_template.html',
-                          {'form': form,'url_': 'django_app:create_office'})
+        return render(request, 'django_app/form_template.html', {'form': form,
+                                                                      'url_': 'django_app:create_office',
+                                                                      'message': 'form is invalid'})
+    form = OfficeForm()
+    return render(request, 'django_app/form_template.html', {'form': form, 'url_': 'django_app:create_office'})
 
 
 def create_client(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)
         if form.is_valid():
-            f_name = form.cleaned_data['first_name']
-            l_name = form.cleaned_data['last_name']
-            if call_procedure_in_db(request, 'insert_client', [f_name, l_name, 0]):
+            if call_procedure_in_db(request, 'insert_client',
+                                    [form.cleaned_data['first_name'], form.cleaned_data['last_name'], 0]):
                 return render(request, 'django_app/index.html', {'message': 'client created'})
-            else:
-                return render(request, 'django_app/index.html', {'message': 'Error while creating a client'})
+            return render(request, 'django_app/index.html', {'message': 'Error while creating a client'})
 
-        else:
-            return render(request, 'django_app/form_template.html', {'form': form,
-                                                                          'url_': 'django_app:create_client',
-                                                                          'message': 'form is invalid'})
-    else:
-        form = ClientForm()
-        return render(request, 'django_app/form_template.html',
-                          {'form': form, 'url_': 'django_app:create_client'})
+        return render(request, 'django_app/form_template.html', {'form': form,
+                                                                 'url_': 'django_app:create_client',
+                                                                 'message': 'form is invalid'})
+    form = ClientForm()
+    return render(request, 'django_app/form_template.html',
+                  {'form': form, 'url_': 'django_app:create_client'})

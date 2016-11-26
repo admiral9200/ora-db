@@ -49,9 +49,7 @@ def login(username, password):
     cookie_dict = {}
     cursor = connections['default'].cursor()
     user_exists = cursor.callfunc(execute_function('check_user_in_db'), cx_Oracle.BOOLEAN, [username, password])
-    print(user_exists)
     if user_exists:
-        print('user exists')
         role_name = cursor.callfunc(execute_function('get_user_role'),
                                     cx_Oracle.FIXED_CHAR, [username, password])
         role_name = role_name.strip()
