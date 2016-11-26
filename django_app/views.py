@@ -7,10 +7,10 @@ from list_requests import list_request
 from .forms import OrderIdForm, ClientIdForm, LoginForm,\
     RegistrationForm, OrderForm, OrderFormToValidate, ClientForm,\
     ChangePasswordForm, CreateUserForm, BonusForm, DiscountForm, ServiceForm, OfficeForm
-from registraton_authorization import login as logging_in
-from registraton_authorization import register as register_in_db
-from registraton_authorization import insert_order ,\
-    return_order as set_order_status_to_returned,\
+from db_functions import login as logging_in
+from db_functions import register as register_in_db
+from db_functions import insert_order ,\
+    mark_order_returned as set_order_status_to_returned,\
     set_order_ready, update_client as update_client_in_db,\
     update_user_password, create_user_in_db, create_bonus_in_db,\
     call_procedure_in_db, call_function_in_db

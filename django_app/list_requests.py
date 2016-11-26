@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import cx_Oracle
 from django.db import connections
-from utils import _get_row_names, execute_function
+from utils import _get_row_names, get_full_name
 from errors import AccessDeniedError
 
 
@@ -18,7 +18,7 @@ def list_request(request, function_name, args=None):
     try:
         cursor = connections[current_connection].cursor()
         # print(connections[current_connection].connection.username)
-        client_cursor = cursor.callfunc(execute_function(function_name), cx_Oracle.CURSOR, args)
+        client_cursor = cursor.callfunc(get_full_name(function_name), cx_Oracle.CURSOR, args)
 
         data = client_cursor.fetchall()
         # print(len(data))
