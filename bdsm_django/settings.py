@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 from __future__ import unicode_literals
+
 import os
+
+from bdsm_django.db_config import database_configuration
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,52 +78,7 @@ WSGI_APPLICATION = 'bdsm_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'admin': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
-        'USER': 'nexemjail',
-        'PASSWORD': 'oraclepassword',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-    'worker': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
-        'USER': 'worker_connection',
-        'PASSWORD': 'password',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-    'user': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
-        'USER': 'user_connection',
-        'PASSWORD': 'password',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-    'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcl',
-        'USER': 'guest_connection',
-        'PASSWORD': 'password',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-}
+DATABASES = database_configuration
 
 
 # Password validation
