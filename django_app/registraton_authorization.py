@@ -2,9 +2,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import cx_Oracle
-from django.db import connections, connection
+from django.db import connections
+
 from utils import execute_function
-from db_config import role_connection_dict
 
 current_connection = 'default'
 

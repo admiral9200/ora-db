@@ -1,5 +1,5 @@
 -- doing loggin here
-CREATE OR REPLACE DIRECTORY LOG_DIR AS 'C:\ora-db\';
+CREATE OR REPLACE DIRECTORY LOG_DIR AS 'C:\Users\shevc\Documents\ora-db\';
 GRANT READ ON DIRECTORY LOG_DIR TO PUBLIC; 
 /
 
