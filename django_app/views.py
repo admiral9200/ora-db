@@ -28,8 +28,9 @@ def change_password(request):
                 if update_user_password(request, request.COOKIES['username'], p1):
                     return render(request, 'django_app/index.html', {'message': 'changed!'})
         return render(request, 'django_app/update_pass_form.html', {'form': form, 'message': 'invalid_form'})
-    form = ChangePasswordForm()
-    return render(request, 'django_app/update_pass_form.html', {'form' : form})
+    else:
+        form = ChangePasswordForm()
+    return render(request, 'django_app/update_pass_form.html', {'form': form})
 
 
 def get_clients(request):
@@ -40,7 +41,7 @@ def get_clients(request):
                   {"error": True})
     extra_thing = {'url': 'django_app:update_client', 'text': 'Update client'}
     return render(request, 'django_app/client_list.html',
-                  {"headers": row_names, "data": data, "error" : False, 'extra_thing' : extra_thing})
+                  {"headers": row_names, "data": data, "error": False, 'extra_thing' : extra_thing})
 
 
 def update_client(request, client_id):
@@ -70,7 +71,7 @@ def client_info(request, client_id):
         for i, element in enumerate(data):
             data[i] = list(data[i])
             data[i][is_ready_index] = bool(element[is_ready_index])
-            extra_thing = {'url': 'django_app:update_client', 'text': 'Update client'}
+        extra_thing = {'url': 'django_app:update_client', 'text': 'Update client'}
         return render(request, 'django_app/client_info.html',
                       {"headers": row_names, "data": data, 'extra_thing': extra_thing})
     except AccessDeniedError:
@@ -110,8 +111,8 @@ def update_office(request, office_id):
                                                                   'url_': 'django_app:update_office'})
 
 
-def index(request):
-    return render(request, 'django_app/index.html')
+# def index(request):
+#     return render(request, 'django_app/index.html')
 
 
 def get_order_info(request, order_id):
@@ -135,7 +136,8 @@ def check_order(request):
         if form.is_valid():
             order_id = form.cleaned_data['order_id']
             return HttpResponseRedirect(reverse('django_app:order', args=(order_id,)))
-    form = OrderIdForm()
+    else:
+        form = OrderIdForm()
     return render(request, 'django_app/check_order.html', {"form": form})
 
 
@@ -160,7 +162,8 @@ def check_client_orders(request):
         if form.is_valid():
             client_id = form.cleaned_data['client_id']
             return HttpResponseRedirect(reverse('django_app:client_orders', args=(client_id,)))
-    form = ClientIdForm()
+    else:
+        form = ClientIdForm()
     return render(request, 'django_app/check_client_orders.html', {"form": form})
 
 
@@ -204,7 +207,8 @@ def check_client_orders_ready_not_returned(request):
         if form.is_valid():
             client_id = form.cleaned_data['client_id']
             return HttpResponseRedirect(reverse('django_app:ready_not_returned_orders', args=(client_id,)))
-    form = ClientIdForm()
+    else:
+        form = ClientIdForm()
     return render(request, 'django_app/check_orders_ready_not_returned.html', {"form": form})
 
 
@@ -214,7 +218,8 @@ def check_client_info(request):
         if form.is_valid():
             client_id = form.cleaned_data['client_id']
             return HttpResponseRedirect(reverse('django_app:client_info', args=(client_id,)))
-    form = ClientIdForm()
+    else:
+        form = ClientIdForm()
     return render(request, 'django_app/check_client_info.html', {"form": form})
 
 
@@ -259,7 +264,6 @@ def register(request):
                 return resp
         return render(request, 'django_app/registration_form.html',
                       {"form": form, 'message': 'Invalid input'})
-
     form = RegistrationForm()
     return render(request, 'django_app/registration_form.html', {"form": form, 'message': None})
 
@@ -355,9 +359,7 @@ def create_bonus(request):
                 return render(request, 'django_app/index.html', {'message': 'bonus created'})
             else:
                 return render(request, 'django_app/index.html', {'message': 'Error while creating a bonus'})
-
-        else:
-            return render(request, 'django_app/form_template.html', {'form': form, 'message': 'form is invalid'})
+        return render(request, 'django_app/form_template.html', {'form': form, 'message': 'form is invalid'})
     else:
         form = BonusForm()
         return render(request, 'django_app/bonus_form.html', {'form': form})

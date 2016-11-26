@@ -78,8 +78,8 @@ WSGI_APPLICATION = 'bdsm_django.wsgi.application'
 DATABASES = {
     'admin': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##nexemjail',
+        'NAME': 'orcl',
+        'USER': 'nexemjail',
         'PASSWORD': 'oraclepassword',
         'HOST': '',
         'PORT': '',
@@ -89,8 +89,8 @@ DATABASES = {
     },
     'worker': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##worker_connection',
+        'NAME': 'orcl',
+        'USER': 'worker_connection',
         'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',
@@ -100,8 +100,8 @@ DATABASES = {
     },
     'user': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##user_connection',
+        'NAME': 'orcl',
+        'USER': 'user_connection',
         'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',
@@ -111,8 +111,8 @@ DATABASES = {
     },
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##guest_connection',
+        'NAME': 'orcl',
+        'USER': 'guest_connection',
         'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',
@@ -159,3 +159,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+DEFAULT_USER = 'nexemjail'

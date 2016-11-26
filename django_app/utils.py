@@ -1,4 +1,4 @@
-default_user = 'c##nexemjail.'
+from django.conf import settings
 
 
 def prettify_strings(string_list):
@@ -16,5 +16,5 @@ def _get_row_names(description):
 
 
 def execute_function(func_name):
-    return default_user + func_name
+    return settings.DEFAULT_USER + '.' + func_name
 

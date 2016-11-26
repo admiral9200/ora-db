@@ -79,6 +79,7 @@ class ClientForm(forms.Form):
     first_name = forms.CharField(label='First Name', required=True)
     last_name = forms.CharField(label='Last name', required=True)
 
+
 class ChangePasswordForm(forms.Form):
     password_1 = forms.CharField(widget=forms.PasswordInput, label='Password new')
     password_2 = forms.CharField(widget=forms.PasswordInput, label='Password new')
@@ -99,7 +100,6 @@ class CreateUserForm(forms.Form):
         _, roles = list_request(request, 'get_roles')
         roles_as_list = map(lambda x: x[0], roles)
         self.fields['role'].choices = zip(roles_as_list, roles_as_list)
-
 
 
 class BonusForm(forms.Form):

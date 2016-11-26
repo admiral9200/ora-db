@@ -14,19 +14,19 @@ def get_current_connection():
 
 role_connection_dict = {
     'admin': [
-        'c##nexemjail',
+        'nexemjail',
         'oraclepassword'
     ],
     'worker': [
-        'c##worker_connection',
+        'worker_connection',
         'password'
     ],
     'user': [
-        'c##user_connection',
+        'user_connection',
         'password'
     ],
     'default': [
-        'c##default_connection',
+        'default_connection',
         'password'
     ]
 }

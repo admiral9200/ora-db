@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.conf.urls import url
+from django.views.generic import TemplateView
 import views
 
 app_name = 'django_app'
@@ -73,6 +74,6 @@ urlpatterns = [
         name='add_order'),
     url(r'all_orders$', views.all_orders,
         name='all_orders'),
-    url(r'$', views.index,
+    url(r'$', TemplateView.as_view(template_name='django_app/index.html'),
         name='index'),
 ]

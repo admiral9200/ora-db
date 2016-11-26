@@ -4,16 +4,12 @@ from __future__ import unicode_literals
 import cx_Oracle
 from django.db import connections
 from utils import _get_row_names, execute_function
-from registraton_authorization import login
-from registraton_authorization import get_current_connection
 from errors import AccessDeniedError
 
 
-def list_request(request, function_name, args=list()):
-    #print(dir(connection.cursor().db.connection.username))
-    #print(connection.cursor().db.connect())
-    # print(dir(connection.connect))
-    # login('kagura', 'passwordlsnrctl stat ')
+def list_request(request, function_name, args=None):
+    if args is None:
+        args = []
     if request.COOKIES. has_key('connection'):
         current_connection = request.COOKIES['connection']
     else:
