@@ -24,7 +24,7 @@ def change_password(request):
         if form.is_valid():
             if update_user_password(request, request.COOKIES['username'], form.cleaned_data['password_1']):
                 return render(request, 'django_app/index.html', {'message': 'changed!'})
-        return render(request, 'django_app/update_pass_form.html', {'form': form, 'message': 'invalid_form'})
+        return render(request, 'django_app/update_pass_form.html', {'form': form, 'message': 'invalid form'})
     else:
         form = ChangePasswordForm()
     return render(request, 'django_app/update_pass_form.html', {'form': form})

@@ -87,7 +87,7 @@ class ChangePasswordForm(forms.Form):
 
     def clean(self):
         if self.cleaned_data['password_1'] != self.cleaned_data['password_2']:
-            return forms.ValidationError('Passwords must match!')
+            raise forms.ValidationError('Passwords must match!')
         return self.cleaned_data
 
 
