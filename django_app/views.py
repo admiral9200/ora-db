@@ -13,7 +13,7 @@ from registraton_authorization import insert_order ,\
     return_order as set_order_status_to_returned,\
     set_order_ready, update_client as update_client_in_db,\
     update_user_password, create_user_in_db, create_bonus_in_db,\
-    call_function_in_db, call_procedure_in_db
+    call_procedure_in_db
 
 from errors import AccessDeniedError
 

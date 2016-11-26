@@ -4,32 +4,13 @@ from __future__ import unicode_literals
 import cx_Oracle
 from django.db import connections, connection
 from utils import execute_function
-import datetime
+from db_config import role_connection_dict
 
 current_connection = 'default'
 
 
 def get_current_connection():
     return current_connection
-
-role_connection_dict = {
-    'admin': [
-        'c##nexemjail',
-        'oraclepassword'
-    ],
-    'worker': [
-        'c##worker_connection',
-        'password'
-    ],
-    'user': [
-        'c##user_connection',
-        'password'
-    ],
-    'default': [
-        'c##default_connection',
-        'password'
-    ]
-}
 
 
 def build_connection_string(username, password):

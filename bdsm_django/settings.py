@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 from __future__ import unicode_literals
+from django_app.db_config import database_configuration
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -75,52 +76,7 @@ WSGI_APPLICATION = 'bdsm_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'admin': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##nexemjail',
-        'PASSWORD': 'oraclepassword',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-    'worker': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##worker_connection',
-        'PASSWORD': 'password',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-    'user': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##user_connection',
-        'PASSWORD': 'password',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-    'default': {
-        'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'orcldb',
-        'USER': 'c##guest_connection',
-        'PASSWORD': 'password',
-        'HOST': '',
-        'PORT': '',
-        'OPTIONS': {
-            'threaded': True,
-        }
-    },
-}
+DATABASES = database_configuration
 
 
 # Password validation
