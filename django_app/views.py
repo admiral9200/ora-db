@@ -22,12 +22,9 @@ def change_password(request):
     if request.method == 'POST':
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
-            p1 = form.cleaned_data['password_1']
-            p2 = form.cleaned_data['password_2']
-            if p1 == p2:
-                if update_user_password(request, request.COOKIES['username'], p1):
-                    return render(request, 'django_app/index.html', {'message': 'changed!'})
-        return render(request, 'django_app/update_pass_form.html', {'form': form, 'message': 'invalid_form'})
+            if update_user_password(request, request.COOKIES['username'], form.cleaned_data['password_1']):
+                return render(request, 'django_app/index.html', {'message': 'changed!'})
+        return render(request, 'django_app/update_pass_form.html', {'form': form, 'message': 'invalid form'})
     else:
         form = ChangePasswordForm()
     return render(request, 'django_app/update_pass_form.html', {'form': form})
@@ -37,24 +34,23 @@ def get_clients(request):
     try:
         row_names, data = list_request(request, 'get_clients')
     except AccessDeniedError:
-        return render(request, 'django_app/client_list.html',
-                  {"error": True})
-    extra_thing = {'url': 'django_app:update_client', 'text': 'Update client'}
+        return render(request, 'django_app/client_list.html', {"error": True})
     return render(request, 'django_app/client_list.html',
-                  {"headers": row_names, "data": data, "error": False, 'extra_thing' : extra_thing})
+                  {"headers": row_names, "data": data, "error": False,
+                   'extra_thing': {'url': 'django_app:update_client', 'text': 'Update client'}})
 
 
 def update_client(request, client_id):
     if request.method == 'POST':
         form = ClientForm(request.POST)
         if form.is_valid():
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            if update_client_in_db(request, first_name, last_name, client_id):
-                resp = HttpResponseRedirect(reverse('django_app:index'))
+            resp = HttpResponseRedirect(reverse('django_app:index'))
+            if update_client_in_db(request,
+                                   form.cleaned_data['first_name'],
+                                   form.cleaned_data['last_name'],
+                                   client_id):
                 resp.write(render(request, 'django_app/index.html', {'message': 'client updated'}))
                 return resp
-            resp = HttpResponseRedirect(reverse('django_app:index'))
             resp.write(render(request, 'django_app/index.html', {'message': 'Error while updating'}))
             return resp
         return render(request, 'django_app/client_form.html', {'form': form, 'id': client_id})
@@ -71,12 +67,12 @@ def client_info(request, client_id):
         for i, element in enumerate(data):
             data[i] = list(data[i])
             data[i][is_ready_index] = bool(element[is_ready_index])
-        extra_thing = {'url': 'django_app:update_client', 'text': 'Update client'}
         return render(request, 'django_app/client_info.html',
-                      {"headers": row_names, "data": data, 'extra_thing': extra_thing})
+                      {"headers": row_names, "data": data,
+                       'extra_thing': {'url': 'django_app:update_client', 'text': 'Update client'}
+                       })
     except AccessDeniedError:
-        return render(request, 'django_app/client_info.html',
-                      {"error": True})
+        return render(request, 'django_app/client_info.html', {"error": True})
 
 
 def get_offices(request):
@@ -111,10 +107,6 @@ def update_office(request, office_id):
                                                                   'url_': 'django_app:update_office'})
 
 
-# def index(request):
-#     return render(request, 'django_app/index.html')
-
-
 def get_order_info(request, order_id):
     try:
         row_names, data = list_request(request, 'get_order_info', [int(order_id)])
@@ -127,7 +119,7 @@ def get_order_info(request, order_id):
                       {"headers": row_names, "data": data})
     except AccessDeniedError:
         return render(request, 'django_app/order_status.html',
-                      {"error" : True})
+                      {"error": True})
 
 
 def check_order(request):
@@ -174,6 +166,7 @@ def all_ready_not_returned_orders(request):
         for i, element in enumerate(data):
             data[i] = list(data[i])
             data[i][is_ready_index] = bool(element[is_ready_index])
+
         extra_thing = None
         if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'worker':
             extra_thing = {'url': 'django_app:return_order', 'text': 'Return'}
@@ -191,6 +184,7 @@ def client_orders_ready_not_returned(request, client_id):
         for i, element in enumerate(data):
             data[i] = list(data[i])
             data[i][is_ready_index] = bool(element[is_ready_index])
+
         extra_thing = None
         if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'worker':
             extra_thing = {'url': 'django_app:return_order', 'text': 'Return'}
@@ -264,7 +258,8 @@ def register(request):
                 return resp
         return render(request, 'django_app/registration_form.html',
                       {"form": form, 'message': 'Invalid input'})
-    form = RegistrationForm()
+    else:
+        form = RegistrationForm()
     return render(request, 'django_app/registration_form.html', {"form": form, 'message': None})
 
 
@@ -279,9 +274,9 @@ def update_service(request, service_id):
         return render(request, 'django_app/edit_form_template.html',
                       {'form': form, 'id': service_id,
                        'url_': 'django_app:update_service'})
-
-    row_names, record = list_request(request, 'get_service_by_id', [int(service_id)])
-    form = ServiceForm(data={'name': record[0][1], 'price': record[0][2]})
+    else:
+        row_names, record = list_request(request, 'get_service_by_id', [int(service_id)])
+        form = ServiceForm(data={'name': record[0][1], 'price': record[0][2]})
     return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': service_id,
                                                                   'url_': 'django_app:update_service'})
 
@@ -347,7 +342,8 @@ def create_user(request):
                 return render(request, 'django_app/index.html', {'message': 'User created!'})
             return render(request, 'django_app/index.html', {'message': 'Error occurred!'})
         return render(request, 'django_app/create_user_form.html', {'form': form})
-    form = CreateUserForm(request=request)
+    else:
+        form = CreateUserForm(request=request)
     return render(request, 'django_app/create_user_form.html', {'form': form})
 
 
@@ -406,7 +402,8 @@ def create_discount(request):
         return render(request, 'django_app/form_template.html', {'form': form,
                                                                  'url_': 'django_app:create_discount',
                                                                  'message': 'form is invalid'})
-    form = DiscountForm()
+    else:
+        form = DiscountForm()
     return render(request, 'django_app/form_template.html', {'form': form, 'url_': 'django_app:create_discount'})
 
 

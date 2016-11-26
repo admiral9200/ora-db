@@ -85,6 +85,12 @@ class ChangePasswordForm(forms.Form):
     password_2 = forms.CharField(widget=forms.PasswordInput, label='Password new')
 
 
+    def clean(self):
+        if self.cleaned_data['password_1'] != self.cleaned_data['password_2']:
+            raise forms.ValidationError('Passwords must match!')
+        return self.cleaned_data
+
+
 class CreateUserForm(forms.Form):
     login = forms.CharField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
