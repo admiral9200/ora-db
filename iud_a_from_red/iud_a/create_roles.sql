@@ -31,6 +31,7 @@ grant execute on c##nexemjail.get_orders to c##worker;
 grant execute on c##nexemjail.get_client_id to c##worker;
 grant execute on c##nexemjail.ready_not_returned to c##worker;
 grant execute on c##nexemjail.get_order_info to c##worker;
+grant execute on c##nexemjail.get_roles to c##worker;
 
 grant execute on c##nexemjail.update_order_return_date to c##worker;
 
