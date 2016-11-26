@@ -237,7 +237,6 @@ def logout(request):
 
 
 def login(request):
-    print(request.COOKIES)
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -380,7 +379,7 @@ def return_order(request, order_id):
 
 def create_user(request):
     if request.method == 'POST':
-        form = CreateUserForm(request.POST)
+        form = CreateUserForm(request.POST, request=request)
         if form.is_valid():
             login = form.cleaned_data['login']
             password = form.cleaned_data['password']
@@ -391,7 +390,7 @@ def create_user(request):
                 return render(request, 'django_app/index.html', {'message': 'Error occured!'})
         return render(request, 'django_app/create_user_form.html', {'form': form})
     else:
-        form = CreateUserForm()
+        form = CreateUserForm(request=request)
         return render(request, 'django_app/create_user_form.html', {'form': form})
 
 
@@ -441,11 +440,6 @@ def update_bonus(request, bonus_id):
         form = BonusForm(data={'type': record[0][1], 'value': record[0][2]})
         return render(request, 'django_app/edit_form_template.html', {'form': form, 'id': bonus_id,
                                                                       'url_': 'django_app:update_bonus'})
-
-
-
-
-
 
 def create_discount(request):
     if request.method == 'POST':

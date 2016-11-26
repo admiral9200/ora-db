@@ -25,8 +25,7 @@ class RegistrationForm(forms.Form):
 def split_id(data):
     id_ = []
     for i, element in enumerate(data):
-        data[i] = element[1:]
-        id_[i] = element[0]
+        id_[i], data[i] = element[0], element[1:]
     return id_, data
 
 
@@ -39,32 +38,32 @@ class OrderForm(forms.Form):
     discount_type_id = forms.ChoiceField(label='Discount ', required=True)
 
     def __init__(self, *args, **kwargs):
-        request = None
         if 'request' in kwargs.keys():
             request = kwargs['request']
             del kwargs['request']
+        else:
+            return
         super(OrderForm, self).__init__(*args, **kwargs)
-        if request:
+        _, data = list_request(request, 'get_service_types')
+        self.fields['service_type_id'].choices = [(int(element[0]),
+                                                   ' '.join(map(str, element[1:]))) for element in data]
 
-            _, data = list_request(request, 'get_service_types')
-            self.fields['service_type_id'].choices = [(int(element[0]),
-                                                       ' '.join(map(str, element[1:]))) for element in data]
+        _, data = list_request(request, 'get_bonuses')
+        self.fields['service_bonus_id'].choices = [(int(element[0]),
+                                                    ' '.join(map(str, element[1:]))) for element in data]\
+                                                  + [(None, "None")]
 
-            _, data = list_request(request, 'get_bonuses')
-            self.fields['service_bonus_id'].choices = [(int(element[0]),
-                                                        ' '.join(map(str, element[1:]))) for element in data] + [(None, "None")]
+        _, data = list_request(request, 'get_clients')
+        self.fields['client_id'].choices = [(int(element[0]),
+                                             ' '.join(map(str, element[1:]))) for element in data]
 
-            _, data = list_request(request, 'get_clients')
-            self.fields['client_id'].choices = [(int(element[0]),
-                                                 ' '.join(map(str, element[1:]))) for element in data]
+        _, data = list_request(request, 'get_discount_types')
+        self.fields['discount_type_id'].choices = [(int(element[0]),
+                                                    ' '.join(map(str, element[1:]))) for element in data]\
+                                                + [(None, "None")]
 
-            _, data = list_request(request, 'get_discount_types')
-            self.fields['discount_type_id'].choices = [(int(element[0]),
-                                                        ' '.join(map(str, element[1:]))) for element in data]  + [(None, "None")]
-
-            _, data = list_request(request, 'get_offices')
-            self.fields['office_id'].choices = [(int(element[0]),
-                                                 ' '.join(map(str, element[1:]))) for element in data]
+        _, data = list_request(request, 'get_offices')
+        self.fields['office_id'].choices = [(int(element[0]), ' '.join(map(str, element[1:]))) for element in data]
 
 
 class OrderFormToValidate(forms.Form):
@@ -79,8 +78,6 @@ class OrderFormToValidate(forms.Form):
 class ClientForm(forms.Form):
     first_name = forms.CharField(label='First Name', required=True)
     last_name = forms.CharField(label='Last name', required=True)
-    # best_client = forms.ChoiceField(label='Best client', choices=[(1, 'True'), (0, 'False')])
-
 
 class ChangePasswordForm(forms.Form):
     password_1 = forms.CharField(widget=forms.PasswordInput, label='Password new')
@@ -90,7 +87,19 @@ class ChangePasswordForm(forms.Form):
 class CreateUserForm(forms.Form):
     login = forms.CharField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
-    role = forms.ChoiceField(required=True, choices=[['admin', 'admin'], ['worker', 'worker'], ['user', 'user']])
+    role = forms.ChoiceField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        if 'request' in kwargs.keys():
+            request = kwargs['request']
+            del kwargs['request']
+        else:
+            return
+        super(CreateUserForm, self).__init__(*args, **kwargs)
+        _, roles = list_request(request, 'get_roles')
+        roles_as_list = map(lambda x: x[0], roles)
+        self.fields['role'].choices = zip(roles_as_list, roles_as_list)
+
 
 
 class BonusForm(forms.Form):
@@ -100,7 +109,7 @@ class BonusForm(forms.Form):
 
 class DiscountForm(forms.Form):
     description = forms.CharField(required=True, label='Type ')
-    value = forms.FloatField(min_value=0, max_value=100, label='Bonus value', required=True)
+    value = forms.FloatField(min_value=0, max_value=100, label='Discount value', required=True)
 
 
 class ServiceForm(forms.Form):

@@ -38,12 +38,11 @@
             <li><a href="{% url 'django_app:offices' %}">Offices</a></li>
             <li><a href="{% url 'django_app:services' %}">Services</a></li>
             {% if request.COOKIES.connection == 'user' %}
-                <li><a href="{% url 'django_app:client_orders' request.COOKIES.client_id %}">Check my orders</a></li>
-{#                <li><a href="{% url 'django_app:check_order'%}">Check order</a></li>#}
-                 <li><a href="{% url 'django_app:ready_not_returned_orders' request.COOKIES.client_id %}">Check ready orders</a></li>
-
-                <li><a href="{% url 'django_app:client_info' request.COOKIES.client_id %}">Profile</a></li>
-
+                {% if request.COOKIES.client_id != 'None' %}
+                    <li><a href="{% url 'django_app:client_orders' request.COOKIES.client_id %}">Check my orders</a></li>
+                    <li><a href="{% url 'django_app:ready_not_returned_orders' request.COOKIES.client_id %}">Check ready orders</a></li>
+                    <li><a href="{% url 'django_app:client_info' request.COOKIES.client_id %}">Profile</a></li>
+                {% endif %}
             {% endif %}
 
             {% if request.COOKIES.connection == 'worker' or request.COOKIES.connection == 'admin' %}
@@ -70,7 +69,6 @@
                 <li><a href="{% url 'django_app:create_discount' %}">Create discount</a></li>
                  <li><a href="{% url 'django_app:create_service' %}">Create service</a></li>
                 <li><a href="{% url 'django_app:create_office' %}">Create office</a></li>
-
             {% endif %}
           </ul>
         </div>
