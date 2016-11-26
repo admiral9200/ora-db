@@ -19,3 +19,5 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
+
+bdsm_django/db_config.py
