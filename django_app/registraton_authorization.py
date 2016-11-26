@@ -6,23 +6,6 @@ from django.db import connections
 
 from utils import execute_function
 
-current_connection = 'default'
-
-
-def get_current_connection():
-    return current_connection
-
-
-def build_connection_string(username, password):
-    return username + '/' + password + '@localhost:1521/oracledb'
-
-
-def logout(request):
-    del request.COOKIES['connection']
-    del request.COOKIES['username']
-    del request.COOKIES['client_id']
-    return True
-
 
 def login(username, password):
     # TODO: check for returning user ib db
@@ -144,14 +127,14 @@ def create_bonus_in_db(request, type, value):
         return False
 
 
-def call_function_in_db(request, func_name, args = None):
+def call_function_in_db(request, func_name, return_type=cx_Oracle.NUMBER, args=None):
     current_connection = request.COOKIES['connection']
     connections[current_connection].connect()
     cursor = connections[current_connection].cursor()
     try:
-        return cursor.callfunc(execute_function(func_name), args)
+        return cursor.callfunc(execute_function(func_name), return_type, args)
     except cx_Oracle.DatabaseError as e:
-        return False
+        return None
 
 
 def call_procedure_in_db(request, func_name, args = None):

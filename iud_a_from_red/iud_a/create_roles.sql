@@ -42,6 +42,7 @@ grant execute on nexemjail.GET_DISCOUNT_TYPES to worker;
 grant execute on nexemjail.UPDATE_USER_PASSWORD to worker;
 grant execute on nexemjail.get_ready_not_returned_orders to worker;
 grant execute on nexemjail.insert_client to worker;
+grant execute on nexemjail.insert_client_v2 to worker;
 
 
 

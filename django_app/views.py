@@ -13,7 +13,7 @@ from registraton_authorization import insert_order ,\
     return_order as set_order_status_to_returned,\
     set_order_ready, update_client as update_client_in_db,\
     update_user_password, create_user_in_db, create_bonus_in_db,\
-    call_procedure_in_db
+    call_procedure_in_db, call_function_in_db
 
 from errors import AccessDeniedError
 
@@ -476,9 +476,10 @@ def create_client(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)
         if form.is_valid():
-            if call_procedure_in_db(request, 'insert_client',
-                                    [form.cleaned_data['first_name'], form.cleaned_data['last_name'], 0]):
-                return render(request, 'django_app/index.html', {'message': 'client created'})
+            value = call_function_in_db(request, 'insert_client_v2',
+                                    args=[form.cleaned_data['first_name'], form.cleaned_data['last_name'], 0])
+            if value and int(value) > 0:
+                return render(request, 'django_app/index.html', {'message': 'client created: {}'.format(value)})
             return render(request, 'django_app/index.html', {'message': 'Error while creating a client'})
 
         return render(request, 'django_app/form_template.html', {'form': form,
