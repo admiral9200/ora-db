@@ -61,7 +61,7 @@
                 <li><a href="{% url 'django_app:all_orders' %}">All orders</a></li>
                 <li><a href="{% url 'django_app:get_bonuses' %}">All bonuses</a></li>
 
-                <li><a href="{% url 'django_app:clients' %}">Clients</a></li>
+                <li><a href="{% url 'django_app:clients' %}">All clients</a></li>
                 <li><a href="{% url 'django_app:create_user' %}">Create user</a></li>
                 <li><a href="{% url 'django_app:create_bonus' %}">Create bonus</a></li>
 
@@ -76,6 +76,15 @@
     </nav>
 
     <div class="container">
+        <div>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <h3 class="header h3"><li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li></h3>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        </div>
         <div>
             {% block content %}
             {% endblock %}
