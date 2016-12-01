@@ -39,6 +39,17 @@ from errors import AccessDeniedError, ACCESS_DENIED_MESSAGE
 from utils import to_index_page, convert_to_type
 
 
+def catch_access_denied(foo):
+    def inner(*args, **kwargs):
+        try:
+            return foo(*args, **kwargs)
+        except AccessDeniedError as e:
+            messages.error(args[0], ACCESS_DENIED_MESSAGE)
+            return to_index_page()
+    return inner
+
+
+@catch_access_denied
 def change_password(request):
     if request.method == 'POST':
         form = ChangePasswordForm(request.POST)
@@ -51,18 +62,16 @@ def change_password(request):
     return render(request, 'django_app/update_pass_form.html', {'form': form})
 
 
+@catch_access_denied
 def get_clients(request):
-    try:
-        row_names, data = list_request(request, 'get_clients')
-    except AccessDeniedError:
-        messages.error(request, ACCESS_DENIED_MESSAGE)
-        return render(request, 'django_app/client_list.html')
+    row_names, data = list_request(request, 'get_clients')
     return render(request, 'django_app/client_list.html',
                   {"headers": row_names, "data": data,
                    'extra_thing': {'url': 'django_app:update_client',
                                    'text': 'Update client'}})
 
 
+@catch_access_denied
 def update_client(request, client_id):
     if request.method == 'POST':
         form = ClientForm(request.POST)
@@ -82,34 +91,30 @@ def update_client(request, client_id):
     return render(request, 'django_app/client_form.html', {'form': form, 'id': client_id})
 
 
+@catch_access_denied
 def client_info(request, client_id):
-    try:
-        row_names, data = list_request(request, 'client_info', [int(client_id)])
-        is_ready_index = row_names.index('Best client')
-        data = convert_to_type(data, bool, is_ready_index)
+    row_names, data = list_request(request, 'client_info', [int(client_id)])
+    is_ready_index = row_names.index('Best client')
+    data = convert_to_type(data, bool, is_ready_index)
 
-        return render(request, 'django_app/client_info.html',
-                      {"headers": row_names, "data": data,
-                       'extra_thing': {'url': 'django_app:update_client', 'text': 'Update client'}
-                       })
-    except AccessDeniedError:
-        messages.error(request, ACCESS_DENIED_MESSAGE)
-        return render(request, 'django_app/client_info.html')
+    return render(request, 'django_app/client_info.html',
+                  {"headers": row_names, "data": data,
+                   'extra_thing': {'url': 'django_app:update_client', 'text': 'Update client'}
+                   })
 
 
+@catch_access_denied
 def get_offices(request):
-    try:
-        row_names, data = list_request(request, 'get_offices')
-        extra_thing = None
-        if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'admin':
-            extra_thing = {'url': 'django_app:update_office', 'text': 'Update office'}
-        return render(request, 'django_app/list_template.html',
-                      {"headers": row_names, "data": data, 'extra_thing': extra_thing})
-    except AccessDeniedError:
-        messages.error(request, ACCESS_DENIED_MESSAGE)
-        return render(request, 'django_app/list_template.html')
+    row_names, data = list_request(request, 'get_offices')
+    extra_thing = None
+    if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'admin':
+        extra_thing = {'url': 'django_app:update_office', 'text': 'Update office'}
+    return render(request, 'django_app/list_template.html',
+                  {"headers": row_names, "data": data, 'extra_thing': extra_thing})
 
 
+
+@catch_access_denied
 def update_office(request, office_id):
     if request.method == 'POST':
         form = OfficeForm(request.POST)
@@ -130,19 +135,17 @@ def update_office(request, office_id):
                                                                   'url_': 'django_app:update_office'})
 
 
+@catch_access_denied
 def get_order_info(request, order_id):
-    try:
-        row_names, data = list_request(request, 'get_order_info', [int(order_id)])
-        is_ready_index = row_names.index('Is ready')
+    row_names, data = list_request(request, 'get_order_info', [int(order_id)])
+    is_ready_index = row_names.index('Is ready')
 
-        data = convert_to_type(data, bool, is_ready_index)
-        return render(request, 'django_app/order_status.html',
-                      {"headers": row_names, "data": data})
-    except AccessDeniedError:
-        messages.error(request, ACCESS_DENIED_MESSAGE)
-        return render(request, 'django_app/order_status.html')
+    data = convert_to_type(data, bool, is_ready_index)
+    return render(request, 'django_app/order_status.html',
+                  {"headers": row_names, "data": data})
 
 
+@catch_access_denied
 def check_order(request):
     if request.method == 'POST':
         form = OrderIdForm(request.POST)
@@ -153,19 +156,17 @@ def check_order(request):
     return render(request, 'django_app/check_order.html', {"form": form})
 
 
+@catch_access_denied
 def client_orders(request, client_id):
-    try:
-        row_names, data = list_request(request, 'client_orders', [int(client_id)])
-        is_ready_index = row_names.index('Is ready')
-        data = convert_to_type(data, bool, is_ready_index)
+    row_names, data = list_request(request, 'client_orders', [int(client_id)])
+    is_ready_index = row_names.index('Is ready')
+    data = convert_to_type(data, bool, is_ready_index)
 
-        return render(request, 'django_app/client_orders_list.html',
-                      {"headers": row_names, "data": data})
-    except AccessDeniedError:
-        messages.error(request, ACCESS_DENIED_MESSAGE)
-        return render(request, 'django_app/client_orders_list.html')
+    return render(request, 'django_app/client_orders_list.html',
+                  {"headers": row_names, "data": data})
 
 
+@catch_access_denied
 def check_client_orders(request):
     if request.method == 'POST':
         form = ClientIdForm(request.POST)
@@ -177,39 +178,33 @@ def check_client_orders(request):
     return render(request, 'django_app/check_client_orders.html', {"form": form})
 
 
+@catch_access_denied
 def all_ready_not_returned_orders(request):
-    try:
-        row_names, data = list_request(request, 'get_ready_not_returned_orders')
-        is_ready_index = row_names.index('Is ready')
-        data = convert_to_type(data, bool, is_ready_index)
+    row_names, data = list_request(request, 'get_ready_not_returned_orders')
+    is_ready_index = row_names.index('Is ready')
+    data = convert_to_type(data, bool, is_ready_index)
 
-        extra_thing = None
-        if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'worker':
-            extra_thing = {'url': 'django_app:return_order', 'text': 'Return'}
-        return render(request, 'django_app/orders_ready_not_returned_list.html',
-                      {"headers": row_names, "data": data, 'extra_thing': extra_thing})
-    except AccessDeniedError:
-        messages.error(request, ACCESS_DENIED_MESSAGE)
-        return render(request, 'django_app/orders_ready_not_returned_list.html')
+    extra_thing = None
+    if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'worker':
+        extra_thing = {'url': 'django_app:return_order', 'text': 'Return'}
+    return render(request, 'django_app/orders_ready_not_returned_list.html',
+                  {"headers": row_names, "data": data, 'extra_thing': extra_thing})
 
 
+@catch_access_denied
 def client_orders_ready_not_returned(request, client_id):
-    try:
-        row_names, data = list_request(request, 'ready_not_returned', [int(client_id)])
-        is_ready_index = row_names.index('Is ready')
-        data = convert_to_type(data, bool, is_ready_index)
+    row_names, data = list_request(request, 'ready_not_returned', [int(client_id)])
+    is_ready_index = row_names.index('Is ready')
+    data = convert_to_type(data, bool, is_ready_index)
 
-        extra_thing = None
-        if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'worker':
-            extra_thing = {'url': 'django_app:return_order', 'text': 'Return'}
-        return render(request, 'django_app/orders_ready_not_returned_list.html',
-                      {"headers": row_names, "data": data, 'extra_thing': extra_thing})
-    except AccessDeniedError:
-        messages.error(request, ACCESS_DENIED_MESSAGE)
-
-        return render(request, 'django_app/orders_ready_not_returned_list.html')
+    extra_thing = None
+    if 'connection' in request.COOKIES and request.COOKIES['connection'] == 'worker':
+        extra_thing = {'url': 'django_app:return_order', 'text': 'Return'}
+    return render(request, 'django_app/orders_ready_not_returned_list.html',
+                  {"headers": row_names, "data": data, 'extra_thing': extra_thing})
 
 
+@catch_access_denied
 def check_client_orders_ready_not_returned(request):
     if request.method == 'POST':
         form = ClientIdForm(request.POST)
@@ -221,6 +216,7 @@ def check_client_orders_ready_not_returned(request):
     return render(request, 'django_app/check_orders_ready_not_returned.html', {"form": form})
 
 
+@catch_access_denied
 def check_client_info(request):
     if request.method == 'POST':
         form = ClientIdForm(request.POST)
@@ -232,6 +228,7 @@ def check_client_info(request):
     return render(request, 'django_app/check_client_info.html', {"form": form})
 
 
+@catch_access_denied
 def logout(request):
     resp = to_index_page()
     resp.delete_cookie('username')
@@ -240,6 +237,7 @@ def logout(request):
     return resp
 
 
+@catch_access_denied
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -262,6 +260,7 @@ def login(request):
     return render(request, 'django_app/login_form.html', {"form": form})
 
 
+@catch_access_denied
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -278,6 +277,7 @@ def register(request):
     return render(request, 'django_app/registration_form.html', {"form": form})
 
 
+@catch_access_denied
 def update_service(request, service_id):
     if request.method == 'POST':
         form = ServiceForm(request.POST)
@@ -298,6 +298,7 @@ def update_service(request, service_id):
                                                                   'url_': 'django_app:update_service'})
 
 
+@catch_access_denied
 def services(request):
     row_names, data = list_request(request, 'get_service_types')
     extra_thing = None
@@ -307,6 +308,7 @@ def services(request):
                   {"headers": row_names, "data": data, "extra_thing": extra_thing})
 
 
+@catch_access_denied
 def order(request):
     if request.method == 'POST':
         form = OrderFormToValidate(request.POST)
@@ -329,11 +331,13 @@ def order(request):
     return render(request, 'django_app/order_form.html', {"form": form})
 
 
+@catch_access_denied
 def all_orders(request):
     row_names, data = list_request(request, 'get_orders')
     return render(request, 'django_app/orders_list.html', {'data': data, 'headers': row_names})
 
 
+@catch_access_denied
 def set_order_ready_status(request, order_id):
     order_id = int(order_id)
     if set_order_ready(request, order_id):
@@ -343,6 +347,7 @@ def set_order_ready_status(request, order_id):
     return to_index_page()
 
 
+@catch_access_denied
 def return_order(request, order_id):
     order_id = int(order_id)
     if set_order_status_to_returned(request, order_id):
@@ -352,6 +357,7 @@ def return_order(request, order_id):
     return to_index_page()
 
 
+@catch_access_denied
 def create_user(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST, request=request)
@@ -369,6 +375,7 @@ def create_user(request):
     return render(request, 'django_app/create_user_form.html', {'form': form})
 
 
+@catch_access_denied
 def create_bonus(request):
     if request.method == 'POST':
         form = BonusForm(request.POST)
@@ -386,6 +393,7 @@ def create_bonus(request):
     return render(request, 'django_app/bonus_form.html', {'form': form})
 
 
+@catch_access_denied
 def get_bonuses(request):
     row_names, data = list_request(request, 'get_bonuses')
     extra_thing = None
@@ -395,6 +403,7 @@ def get_bonuses(request):
                                                              'extra_thing': extra_thing})
 
 
+@catch_access_denied
 def update_bonus(request, bonus_id):
     if request.method == 'POST':
         form = BonusForm(request.POST)
@@ -416,6 +425,7 @@ def update_bonus(request, bonus_id):
                                                                       'url_': 'django_app:update_bonus'})
 
 
+@catch_access_denied
 def create_discount(request):
     if request.method == 'POST':
         form = DiscountForm(request.POST)
@@ -433,6 +443,7 @@ def create_discount(request):
                   {'form': form, 'url_': 'django_app:create_discount'})
 
 
+@catch_access_denied
 def get_discounts(request):
     row_names, data = list_request(request, 'get_discount_types')
     extra_thing = None
@@ -442,6 +453,7 @@ def get_discounts(request):
                                                              'extra_thing': extra_thing})
 
 
+@catch_access_denied
 def update_discount(request, discount_id):
     if request.method == 'POST':
         form = DiscountForm(request.POST)
@@ -462,6 +474,7 @@ def update_discount(request, discount_id):
                                                                   'url_': 'django_app:update_discount'})
 
 
+@catch_access_denied
 def create_service(request):
     if request.method == 'POST':
         form = ServiceForm(request.POST)
@@ -480,6 +493,7 @@ def create_service(request):
                   {'form': form, 'url_': 'django_app:create_service'})
 
 
+@catch_access_denied
 def create_office(request):
     if request.method == 'POST':
         form = OfficeForm(request.POST)
@@ -498,6 +512,7 @@ def create_office(request):
                   {'form': form, 'url_': 'django_app:create_office'})
 
 
+@catch_access_denied
 def create_client(request):
     if request.method == 'POST':
         form = ClientForm(request.POST)

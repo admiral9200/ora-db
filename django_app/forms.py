@@ -35,7 +35,7 @@ class OrderForm(forms.Form):
     service_bonus_id = forms.ChoiceField(label='Service bonus', required=False)
     amount = forms.IntegerField(label='Amount ', min_value=1, required=True)
     office_id = forms.ChoiceField(label='Office', required=True)
-    discount_type_id = forms.ChoiceField(label='Discount ', required=True)
+    discount_type_id = forms.ChoiceField(label='Discount ', required=False)
 
     def __init__(self, *args, **kwargs):
         if 'request' in kwargs.keys():
